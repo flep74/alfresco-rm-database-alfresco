@@ -362,6 +362,11 @@
             </properties>
         </type>
 
+
+
+
+
+
     </types>
 
     <!-- Aspects -->
@@ -377,10 +382,6 @@
         <aspect name="rm:openedit">
             <title>Marks a declaration as needing more additional information</title>
         </aspect>
-
-
-
-
 
         <aspect name="rm:sendMaillogs">
             <title>Attributes related to a template</title>
@@ -516,7 +517,6 @@
         <aspect name="rm:redFlag">
             <title>marks a declaration as need to be paid specialattention #36539 </title>
         </aspect>
-
 
         <aspect name="rm:returnDateForDeclaration">
             <title>The date a declaration has been returned</title>
