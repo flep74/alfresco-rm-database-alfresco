@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static dk.magenta.model.DatabaseModel.PROP_PSYC_LIBRARY_PSYCH_TYPE;
+import static dk.magenta.model.DatabaseModel.RMPSY_MODEL_PREFIX;
+
 public class GetPaginetedEntries extends AbstractWebScript {
 
     private EntryBean entryBean;
@@ -82,6 +85,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
             System.out.println(input);
 
             JSONArray queryArray = new JSONArray();
+
 
             LocalDateTime f_date = null;
 
@@ -278,6 +282,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 JSONObject o = new JSONObject();
                 o.put("key", "mainDiagnosis");
                 o.put("value", "(" + queryStringMainCharge + ")");
+
                 o.put("include", true);
                 queryArray.put(o);
             }
@@ -509,6 +514,42 @@ public class GetPaginetedEntries extends AbstractWebScript {
             }
 
 
+            String instrumentQuery = "";
+            if (input.has("instruments")) {
+
+                JSONObject instruments = input.getJSONObject("instruments");
+                System.out.println("tjek lige instruments..");
+                System.out.println(instruments.length());
+
+                Iterator i = instruments.keys();
+
+                while (i.hasNext()) {
+                    String instrument = (String) i.next();
+                    JSONObject values = instruments.getJSONObject(instrument);
+
+                    System.out.println("hvad er values");
+                    System.out.println(values);
+
+
+
+                    String instrumentQuerypart = createInstrumentQuery(instrument, values);
+
+                    if (!instrumentQuerypart.equals("")) {
+                        if (instrumentQuery.equals("")) {
+                            instrumentQuery = "(" + instrumentQuerypart + ")";
+                        } else {
+                            instrumentQuery = instrumentQuery + " AND " + "(" + instrumentQuerypart + ")";
+                        }
+                    }
+                }
+
+                System.out.println("total query");
+                System.out.println(instrumentQuery);
+            }
+
+            if (!instrumentQuery.equals("")) {
+                query = query + " AND " + instrumentQuery;
+            }
 
             System.out.println("the query");
             System.out.println(query);
@@ -596,6 +637,46 @@ public class GetPaginetedEntries extends AbstractWebScript {
         }
 
         JSONUtils.write(webScriptWriter, result);
+    }
+
+    public String createInstrumentQuery(String instrument, JSONObject values) throws JSONException {
+
+        String stdQuery = "@" + RMPSY_MODEL_PREFIX + "\\:" + instrument + ":";
+        String returnQuery = "";
+
+        ArrayList selected = new ArrayList();
+
+        Iterator keys = values.keys();
+
+        while (keys.hasNext()) {
+            String key = (String)keys.next();
+            if (values.getBoolean(key)) {
+
+                if (returnQuery.equals("")) {
+                    returnQuery = stdQuery + key;
+                }
+                else {
+                    returnQuery = returnQuery + " OR " + stdQuery + key;
+                }
+                selected.add(key);
+            }
+        }
+
+        System.out.println("selected for:" + instrument);
+        System.out.println(String.join(",", selected));
+
+        System.out.println("hvad er returnQuery");
+        System.out.println(returnQuery);
+
+
+
+//        switch (instrument) {
+//
+//            case PROP_PSYC_LIBRARY_PSYCH_TYPE:
+//                break;
+//        }
+
+        return returnQuery;
     }
 }
 
