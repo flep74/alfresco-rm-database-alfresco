@@ -71,6 +71,53 @@ public class DocumentTemplateBean {
     }
 
 
+    public String populateIndlagt(NodeRef declaration, String type, String retten, String dato) throws Exception {
+
+        String documentNodeRef = null;
+
+           NodeRef nodeRef_templateFolder = siteService.getContainer(DatabaseModel.TYPE_PSYC_SITENAME, DatabaseModel.PROP_TEMPLATE_LIBRARY);
+
+            // vælg her de to forskellige
+
+            List<String> list = Arrays.asList(((nodeService.hasAspect(declaration, DatabaseModel.ASPECT_BUA)) ? DatabaseModel.PROP_TEMPLATE_ERKLAERING_INDLAGT_FILENAME_BUA : DatabaseModel.PROP_TEMPLATE_ERKLAERING_INDLAGT_FILENAME));
+            List<ChildAssociationRef> children = nodeService.getChildrenByName(nodeRef_templateFolder, ContentModel.ASSOC_CONTAINS, list);
+
+            NodeRef template_doc = children.get(0).getChildRef();
+
+            documentNodeRef = this.generateIndlagtErklaering(template_doc, declaration, retten, dato);
+
+            // add signiture aspect
+            NodeRef newDoc = new NodeRef("workspace://SpacesStore/" + documentNodeRef);
+            Map<QName, Serializable> aspectProps = new HashMap<>();
+            nodeService.addAspect(newDoc, ASPECT_ADDSIGNATURE, aspectProps);
+
+        if (nodeService.hasAspect(declaration, DatabaseModel.ASPECT_BUA)) {
+             nodeRef_templateFolder = siteService.getContainer(DatabaseModel.TYPE_PSYC_SITENAME, DatabaseModel.PROP_TEMPLATE_LIBRARY);
+             list = Arrays.asList((nodeService.hasAspect(declaration, DatabaseModel.ASPECT_BUA)) ? DatabaseModel.PROP_PSYCOLOGICALDOCUMENT_BUA : DatabaseModel.PROP_PSYCOLOGICALDOCUMENT);
+             children = nodeService.getChildrenByName(nodeRef_templateFolder, ContentModel.ASSOC_CONTAINS, list);
+
+             template_doc = children.get(0).getChildRef();
+
+             NodeRef psycologicalDocument = this.generatePsycologicalDocumen(template_doc, declaration);
+
+             permissionService.setPermission(psycologicalDocument, DatabaseModel.GROUP_ALLOWEDTODELETE, PermissionService.DELETE_NODE, true);
+        }
+        else {
+            nodeRef_templateFolder = siteService.getContainer(DatabaseModel.TYPE_PSYC_SITENAME, DatabaseModel.PROP_TEMPLATE_LIBRARY);
+            list = Arrays.asList(DatabaseModel.PROP_SAMTYKKE_TDL_KONTAKT);
+            children = nodeService.getChildrenByName(nodeRef_templateFolder, ContentModel.ASSOC_CONTAINS, list);
+
+            template_doc = children.get(0).getChildRef();
+
+            NodeRef samtykkeTidlKontaktDocument = this.generateSamtykkeDocument(template_doc, declaration);
+            permissionService.setPermission(samtykkeTidlKontaktDocument, DatabaseModel.GROUP_ALLOWEDTODELETE, PermissionService.DELETE_NODE, true);
+        }
+
+        permissionService.setPermission(new NodeRef("workspace://SpacesStore/" + documentNodeRef), DatabaseModel.GROUP_ALLOWEDTODELETE, PermissionService.DELETE_NODE, true);
+        return documentNodeRef;
+    }
+
+
 
     public String populateDocument(NodeRef declaration, String type, String retten, String dato) throws Exception{
 
@@ -234,6 +281,63 @@ public class DocumentTemplateBean {
 
         info.doctor = (String)nodeService.getProperty(declaration, PROP_DOCTOR);
         return info;
+    }
+
+
+
+
+
+    public String generateIndlagtErklaering(NodeRef templateDoc, NodeRef declaration, String retten, String dato) throws Exception {
+
+        DeclarationInfo info = this.getProperties(declaration);
+        NodeRef nodeRef_templateFolder = siteService.getContainer(DatabaseModel.TYPE_PSYC_SITENAME, DatabaseModel.PROP_TEMPLATE_LIBRARY);
+
+
+        ContentReader contentReader = contentService.getReader(templateDoc, ContentModel.PROP_CONTENT);
+        TextDocument templateDocument = TextDocument.loadDocument(contentReader.getContentInputStream());
+
+        VariableField candidateVar = templateDocument.getVariableFieldByName("cpr");
+        candidateVar.updateField(info.cpr, null);
+
+        VariableField navn = templateDocument.getVariableFieldByName("Navn");
+        navn.updateField(info.fornavn + " " + info.efternavn, null);
+
+        VariableField retteni = templateDocument.getVariableFieldByName("retteni");
+        retteni.updateField(retten, null);
+
+        VariableField kendelsesdato = templateDocument.getVariableFieldByName("kendelsesdato");
+        kendelsesdato.updateField(dato, null);
+
+
+        VariableField politikreds = templateDocument.getVariableFieldByName("politikreds");
+        politikreds.updateField(info.politikreds, null);
+
+        VariableField kunnavn = templateDocument.getVariableFieldByName("kunnavn");
+        kunnavn.updateField(info.fornavn + " " + info.efternavn, null);
+
+        VariableField patientnr = templateDocument.getVariableFieldByName("patientnr");
+        patientnr.updateField(info.sagsnr, null);
+
+        VariableField journalnr = templateDocument.getVariableFieldByName("journalnr");
+        journalnr.updateField(info.journalnummer, null);
+
+        VariableField modtagetdato = templateDocument.getVariableFieldByName("modtagetdato");
+        modtagetdato.updateField(info.oprettetdato, null);
+
+        // #43832 - declarations should be saved in the new folder, Erklaering og Psykologisk rapport
+        NodeRef folder = fileFolderService.searchSimple(declaration, DatabaseModel.ATTR_DEFAULT_DECLARATION_FOLDER);
+        FileInfo newFile = fileFolderService.create(folder, info.cpr.substring(0,7) + "_erklaering.odt", ContentModel.TYPE_CONTENT);
+
+
+        ContentWriter writer = contentService.getWriter(newFile.getNodeRef(), ContentModel.PROP_CONTENT, true);
+        writer.setMimetype("application/vnd.oasis.opendocument.text");
+
+        File f = new File("tmp");
+
+        templateDocument.save(f);
+        writer.putContent(f);
+
+        return newFile.getNodeRef().getId();
     }
 
     public String generateOfferLetterDocumentKendelse(NodeRef templateDoc, NodeRef declaration, String retten, String dato) throws Exception {
