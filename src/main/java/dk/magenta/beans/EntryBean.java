@@ -82,6 +82,9 @@ public class EntryBean {
 
     public NodeRef addEntry (String siteShortName, String type, Map<QName, Serializable> properties, boolean bua) throws JSONException {
 
+
+        System.out.println("lets do add...");
+
         //Get counter for this site document library
         NodeRef docLibRef = siteService.getContainer(siteShortName, SiteService.DOCUMENT_LIBRARY);
         Integer counter;
@@ -219,6 +222,13 @@ public class EntryBean {
         if (properties.containsKey(DatabaseModel.PROP_FLOWCHART_FLAG)) {
             nodeService.addAspect(nodeRef, DatabaseModel.ASPECT_REDFLAG, null);
         }
+
+        // set the rm:koen value to make life easier for the sort by koen
+        String cpr = (String) nodeService.getProperty(nodeRef, DatabaseModel.PROP_CPR);
+        int number = Integer.parseInt(cpr.substring(9));
+
+        nodeService.addAspect(nodeRef, DatabaseModel.ASPECT_BEREGNETKOEN, null);
+        nodeService.setProperty(nodeRef, DatabaseModel.PROP_KOEN, (number % 2 == 0) ? "K" : "M");
 
         return nodeRef;
     }
