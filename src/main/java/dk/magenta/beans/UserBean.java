@@ -88,7 +88,7 @@ public class UserBean {
 
                     String d = (String) nodeService.getProperty(user, PROP_EXPIRYDATE);
 
-                    if ( d != null) {
+                    if ( d != null && !(d.equals("null"))) {
                         Date expires = new SimpleDateFormat("yyyy-MM-dd").parse(d);
 
                         if (now.after(expires)) {
