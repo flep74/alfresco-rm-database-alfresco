@@ -572,5 +572,15 @@
             </properties>
         </aspect>
 
+        <aspect name="rm:beregnetKoen">
+            <title>stores K for Kvinde or M for Mand</title>
+            <properties>
+                <property name="rm:koen">
+                    <title>koen</title>
+                    <type>d:text</type>
+                </property>
+            </properties>
+        </aspect>
+
     </aspects>
 </model>

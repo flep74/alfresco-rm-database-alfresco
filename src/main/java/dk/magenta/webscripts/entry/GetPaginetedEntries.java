@@ -467,6 +467,19 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 queryArray.put(o);
             }
 
+            if (input.has("koen")) {
+                String koen = input.getString("koen");
+
+                if (!koen.equals("alle")) {
+                    JSONObject o = new JSONObject();
+
+                    o.put("key", "koen");
+                    o.put("value", koen);
+                    o.put("include", true);
+                    queryArray.put(o);
+                }
+            }
+
             if (input.has("socialworker")) {
                 JSONObject o = new JSONObject();
                 o.put("key", "socialworker");
@@ -512,6 +525,10 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     query = query + " AND -ASPECT:\"rm:bua\"";
                 }
             }
+
+
+
+
 
 
             String instrumentQuery = "";
