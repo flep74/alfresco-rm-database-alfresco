@@ -219,6 +219,9 @@ public interface DatabaseModel {
     String PROP_TEMPLATE_DOC_SAMTYKKE_FILENAME_BUA = "samtykke_bua.odt";
     String PROP_TEMPLATE_DOC_KENDELSE_FILENAME_BUA = "kendelse_bua.odt";
 
+    String PROP_TEMPLATE_ERKLAERING_INDLAGT_FILENAME = "indlagt.odt";
+    String PROP_TEMPLATE_ERKLAERING_INDLAGT_FILENAME_BUA = "indlagt_bua.odt";
+
     QName PROP_EXPIRYDATE = QName.createQName(RM_MODEL_URI, "expirydate");
 
     /**
@@ -263,6 +266,10 @@ public interface DatabaseModel {
 
     String statusCriteriaAmbulant = "2";
     String statusCriteriaIndlagt = "3";
+
+    String statusIndlagt = "Indlagt til observation";
+    String statusIndlagtGR = "Gr-Indlagt til observation";
+
 
     String DEFAULT_MAIL_TEXT_RETURN = "standardtextReturnering.odt";
 
