@@ -63,18 +63,11 @@ public class MergeDocTemplate extends AbstractWebScript {
             System.out.println(status);
 
         // todo check here for the state indlagt and handle accordingly and only for BUA
-        if ( !(nodeService.hasAspect(node, DatabaseModel.ASPECT_BUA)) && (status.equals(DatabaseModel.statusIndlagt) || status.equals(DatabaseModel.statusIndlagt)) ) {
+        if ( !(nodeService.hasAspect(node, DatabaseModel.ASPECT_BUA)) && (status.equals(DatabaseModel.statusIndlagt) || status.equals(DatabaseModel.statusIndlagtGR)) ) {
 
-            // prepare as if it was an DatabaseModel.PROP_TEMPLATE_DOC_KENDELSE
-            if (json.has("dato") && json.has("retten")) {
-                String newDocument = documentTemplateBean.populateIndlagt(new NodeRef("workspace://SpacesStore/" + json.get("id")), (String)json.get("type") , (String)json.get("retten"), (String)json.get("dato") );
-                result = JSONUtils.getObject("id", newDocument.toString());
-                JSONUtils.write(webScriptWriter, result);
-            }
-            else {
-                result = JSONUtils.getError(new Exception("wrong parameters supplied"));
-                JSONUtils.write(webScriptWriter, result);
-            }
+            String newDocument = documentTemplateBean.populateIndlagt(new NodeRef("workspace://SpacesStore/" + json.get("id")), (String) json.get("type"), (String) json.get("retten"), (String) json.get("dato"));
+            result = JSONUtils.getObject("id", newDocument.toString());
+            JSONUtils.write(webScriptWriter, result);
 
         }
         else if (json.has("type")) {
