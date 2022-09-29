@@ -331,7 +331,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String doctor = (String) jsonArray.get(i);
-                    doctor = doctor.split("-")[0];
+//                    doctor = doctor.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
                         queryStringDoctor = queryStringDoctor + "\"" + doctor + "\"";
@@ -417,7 +417,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String psychologist = (String) jsonArray.get(i);
-                    psychologist = psychologist.split("-")[0];
+//                    psychologist = psychologist.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
                         queryStringPsychologist = queryStringPsychologist + "\"" + psychologist + "\"";
@@ -478,7 +478,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String socialworker = (String) jsonArray.get(i);
-                    socialworker = socialworker.split("-")[0];
+                    // socialworker = socialworker.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
                         queryStringSocialworker = queryStringSocialworker + "\"" + socialworker + "\"";
