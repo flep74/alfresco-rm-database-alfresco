@@ -1,17 +1,18 @@
 package dk.magenta.bootstrap;
 
-import dk.magenta.beans.DatabaseBean;
-import dk.magenta.beans.EntryBean;
-import dk.magenta.beans.PropertyValuesBean;
+import dk.magenta.beans.*;
 import dk.magenta.model.DatabaseModel;
 import dk.magenta.utils.JSONUtils;
 import org.alfresco.repo.security.authentication.AuthenticationUtil;
 import org.alfresco.service.cmr.model.FileNotFoundException;
 import org.alfresco.service.cmr.repository.NodeRef;
+import org.alfresco.service.cmr.repository.StoreRef;
+import org.alfresco.service.cmr.search.ResultSet;
 import org.alfresco.service.cmr.security.PermissionService;
 import org.alfresco.service.cmr.site.SiteInfo;
 import org.alfresco.service.cmr.site.SiteService;
 import org.alfresco.service.namespace.QName;
+import org.alfresco.service.transaction.TransactionService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.ApplicationEvent;
@@ -26,16 +27,31 @@ public class Bootstrap extends AbstractLifecycleBean {
 
     private PropertyValuesBean propertyValuesBean;
 
+    public void setTransactionService(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
+    private TransactionService transactionService;
+
     public void setPropertyValuesBean(PropertyValuesBean propertyValuesBean) {
         this.propertyValuesBean = propertyValuesBean;
     }
+
+    public void setPsycValuesBean(PsycValuesBean psycValuesBean) {
+        this.psycValuesBean = psycValuesBean;
+    }
+    private PsycValuesBean psycValuesBean;
 
     private EntryBean entryBean;
     public void setEntryBean(EntryBean entryBean) {
         this.entryBean = entryBean;
     }
 
+    public void setPsycBean(PsycBean psycBean) {
+        this.psycBean = psycBean;
+    }
 
+    private PsycBean psycBean;
 
 
     private SiteService siteService;
@@ -77,7 +93,22 @@ public class Bootstrap extends AbstractLifecycleBean {
 */
         // Load property values
 
+
         System.out.println("starting bootstrap");
+
+        transactionService.getRetryingTransactionHelper().doInTransaction(() -> {
+                psycBean.createAllData();
+                try {
+                    psycValuesBean.loadPropertyValues();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            return true;
+        });
 
         try {
             List<SiteInfo> siteInfos = siteService.findSites("", 0);
@@ -94,6 +125,8 @@ public class Bootstrap extends AbstractLifecycleBean {
     protected void onShutdown(ApplicationEvent applicationEvent) {
         // do nothing
     }
+
+
 
     private void createDeclarations(int number) {
 
