@@ -287,7 +287,12 @@ public class PrintBean {
         }
 
         //column.getCellByIndex(0).addParagraph("Fra dato: " + from);
-        
+
+
+        // vis kun overskrift og værdi, hvis der er en værdi
+
+        // todo mindre skriftstype.
+
         Row row = table.getRowByIndex(1);
         row.getCellByIndex(0).addParagraph("Fra dato: " + from);
         row = table.getRowByIndex(1);
@@ -302,9 +307,6 @@ public class PrintBean {
         row.getCellByIndex(0).addParagraph("Ventetid: " + waitingTime);
         row = table.getRowByIndex(1);
         row.getCellByIndex(0).addParagraph("Retslig status: " + status);
-
-
-
 
         return table;
     }
