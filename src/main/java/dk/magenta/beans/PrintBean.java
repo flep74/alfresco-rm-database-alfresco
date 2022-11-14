@@ -5,6 +5,8 @@ import org.alfresco.model.ContentModel;
 import org.alfresco.service.cmr.repository.*;
 import org.alfresco.service.cmr.site.SiteService;
 import org.alfresco.service.namespace.QName;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odftoolkit.odfdom.type.Color;
@@ -15,9 +17,14 @@ import org.odftoolkit.simple.style.StyleTypeDefinitions;
 import org.odftoolkit.simple.table.Column;
 import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
+import org.odftoolkit.simple.text.Paragraph;
+
 import java.io.File;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static dk.magenta.model.DatabaseModel.ASPECT_TMP;
@@ -53,7 +60,11 @@ public class PrintBean {
 
         TextDocument document = TextDocument.newTextDocument();
 
-        this.setupUsedSearchCriteries(searchQueriesForPdf, document.addTable(9,2));
+//        Paragraph headline = document.addParagraph("udskrevet af... ");
+        //headline.setHorizontalAlignment(StyleTypeDefinitions.HorizontalAlignmentType.CENTER);
+        
+
+        this.setupUsedSearchCriteries(searchQueriesForPdf, document.addTable(3,1));
 
         Table table = document.addTable();
 
@@ -71,6 +82,9 @@ public class PrintBean {
 //
         Font headerFont = new Font("Arial", StyleTypeDefinitions.FontStyle.BOLD, 8, Color.BLACK);
         Border border = new Border(Color.BLACK, 0.1, StyleTypeDefinitions.SupportedLinearMeasure.PT);
+
+
+
 
         header.getCellByIndex(0).setFont(headerFont);
         header.getCellByIndex(1).setFont(headerFont);
@@ -242,6 +256,14 @@ public class PrintBean {
 
     private Table setupUsedSearchCriteries(JSONObject jsonObject, Table table) throws JSONException {
 
+        System.out.println("hvad er jsonObject");
+        System.out.println("hvad er jsonObject");
+        System.out.println("hvad er jsonObject");
+        System.out.println("hvad er jsonObject");
+        System.out.println(jsonObject);
+
+
+        Font font = new Font("Arial", StyleTypeDefinitions.FontStyle.REGULAR, 6, Color.BLACK);
 
         String from = "";
         if (jsonObject.has("createdFromDate")) {
@@ -276,6 +298,11 @@ public class PrintBean {
             closed = "alle";
         }
 
+        String placement = "";
+        if (jsonObject.has("placement")) {
+            placement = jsonObject.getString("placement");
+        }
+
         String waitingTime = "";
         if (jsonObject.has("waitingTime")) {
             waitingTime = jsonObject.getString("waitingTime");
@@ -286,27 +313,122 @@ public class PrintBean {
             status = jsonObject.getString("status");
         }
 
-        //column.getCellByIndex(0).addParagraph("Fra dato: " + from);
+        String psychologist = "";
+        if (jsonObject.has("psychologist")) {
+            psychologist = jsonObject.getString("psychologist");
+        }
+
+        String doctor = "";
+        if (jsonObject.has("doctor")) {
+            doctor = jsonObject.getString("doctor");
+        }
+
+        String socialworker = "";
+        if (jsonObject.has("socialworker")) {
+            socialworker = jsonObject.getString("socialworker");
+        }
+
+        String supervisingDoctor = "";
+        if (jsonObject.has("supervisingDoctor")) {
+            supervisingDoctor = jsonObject.getString("supervisingDoctor");
+        }
+
+        String declarationFromDate = "";
+        if (jsonObject.has("declarationFromDate")) {
+            declarationFromDate = jsonObject.getString("declarationFromDate");
+        }
+
+        String declarationToDate = "";
+        if (jsonObject.has("declarationToDate")) {
+            declarationToDate = jsonObject.getString("declarationToDate");
+        }
+
+        String noDeclaration = "";
+        if (jsonObject.has("noDeclaration")) {
+            noDeclaration = jsonObject.getString("noDeclaration");
+        }
+
+        String koen = "";
+        if (jsonObject.has("koen")) {
+            koen = jsonObject.getString("koen");
+        }
+
+        String cpr = "";
+        if (jsonObject.has("cpr")) {
+            cpr = jsonObject.getString("cpr");
+        }
+
+        String firstName = "";
+        if (jsonObject.has("firstName")) {
+            firstName = jsonObject.getString("firstName");
+        }
+
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+
+        Row row = table.getRowByIndex(0);
+        row.getCellByIndex(0).addParagraph("udskrevet den " + outputFormatter.format(LocalDateTime.now()));
+        row.getCellByIndex(0).setHorizontalAlignment(StyleTypeDefinitions.HorizontalAlignmentType.RIGHT);
+
+        Font fontItaliz = new Font("Arial", StyleTypeDefinitions.FontStyle.BOLDITALIC, 12, Color.BLACK);
+        row.getCellByIndex(0).setFont(fontItaliz);
 
 
-        // vis kun overskrift og værdi, hvis der er en værdi
+        if (!from.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Fra dato: " + from);
+            row.getCellByIndex(0).setFont(font);
+        }
 
-        // todo mindre skriftstype.
+        if (!to.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Til dato: " + to);
+            row.getCellByIndex(0).setFont(font);
+        }
 
-        Row row = table.getRowByIndex(1);
-        row.getCellByIndex(0).addParagraph("Fra dato: " + from);
-        row = table.getRowByIndex(1);
-        row.getCellByIndex(0).addParagraph("Til dato: " + to);
-        row = table.getRowByIndex(1);
-        row.getCellByIndex(0).addParagraph("Hovedsigtelse: " + mainCharge);
-        row = table.getRowByIndex(1);
-        row.getCellByIndex(0).addParagraph("Hoveddiagnose: " + mainDiagnosis);
-        row = table.getRowByIndex(1);
-        row.getCellByIndex(0).addParagraph("Sagsstatus: " + closed);
-        row = table.getRowByIndex(1);
-        row.getCellByIndex(0).addParagraph("Ventetid: " + waitingTime);
-        row = table.getRowByIndex(1);
-        row.getCellByIndex(0).addParagraph("Retslig status: " + status);
+        if (!mainCharge.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Hovedsigtelse: " + mainCharge);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!mainDiagnosis.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Hoveddiagnose: " + mainDiagnosis);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!placement.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Placering: " + placement);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!closed.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Sagsstatus: " + closed);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!waitingTime.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Ventetid: " + waitingTime);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!status.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Retslig status: " + status);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!psychologist.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Psykolog: " + status);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+
+
 
         return table;
     }

@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static dk.magenta.model.DatabaseModel.PROP_PSYC_LIBRARY_PSYCH_TYPE;
+import static dk.magenta.model.DatabaseModel.RMPSY_MODEL_PREFIX;
+
 public class GetPaginetedEntries extends AbstractWebScript {
 
     private EntryBean entryBean;
@@ -76,16 +79,20 @@ public class GetPaginetedEntries extends AbstractWebScript {
             String keyValue = req.getParameter("keyValue");
 
 
+
             // setup query
 
 
 
             JSONObject input = new JSONObject(c.getContent());
+            System.out.println("hvad er input");
+            System.out.println(input);
 
             System.out.println("hvad er input");
             System.out.println(input);
 
             JSONArray queryArray = new JSONArray();
+
 
             LocalDateTime f_date = null;
 
@@ -311,6 +318,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 JSONObject o = new JSONObject();
                 o.put("key", "mainDiagnosis");
                 o.put("value", "(" + queryStringMainCharge + ")");
+
                 o.put("include", true);
                 queryArray.put(o);
             }
@@ -360,7 +368,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String doctor = (String) jsonArray.get(i);
-                    doctor = doctor.split("-")[0];
+//                    doctor = doctor.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
                         queryStringDoctor = queryStringDoctor + "\"" + doctor + "\"";
@@ -448,7 +456,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String psychologist = (String) jsonArray.get(i);
-                    psychologist = psychologist.split("-")[0];
+//                    psychologist = psychologist.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
                         queryStringPsychologist = queryStringPsychologist + "\"" + psychologist + "\"";
@@ -478,6 +486,39 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 queryArray.put(o);
             }
 
+            if (input.has("firstName")) {
+                String fornavn = input.getString("firstName");
+                JSONObject o = new JSONObject();
+
+                o.put("key", "firstName");
+                o.put("value", fornavn + "*");
+                o.put("include", true);
+                queryArray.put(o);
+            }
+
+            if (input.has("cpr")) {
+                String cpr = input.getString("cpr");
+                JSONObject o = new JSONObject();
+
+                o.put("key", "cprNumber");
+                o.put("value", cpr + "*");
+                o.put("include", true);
+                queryArray.put(o);
+            }
+
+            if (input.has("koen")) {
+                String koen = input.getString("koen");
+
+                if (!koen.equals("alle")) {
+                    JSONObject o = new JSONObject();
+
+                    o.put("key", "koen");
+                    o.put("value", koen);
+                    o.put("include", true);
+                    queryArray.put(o);
+                }
+            }
+
             if (input.has("socialworker")) {
                 JSONObject o = new JSONObject();
                 o.put("key", "socialworker");
@@ -489,7 +530,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String socialworker = (String) jsonArray.get(i);
-                    socialworker = socialworker.split("-")[0];
+                    // socialworker = socialworker.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
                         queryStringSocialworker = queryStringSocialworker + "\"" + socialworker + "\"";
@@ -525,6 +566,48 @@ public class GetPaginetedEntries extends AbstractWebScript {
             }
             else {
                 searchQueriesForPdf.put("searchType", "alle");
+            }
+
+
+
+
+
+
+            String instrumentQuery = "";
+            if (input.has("instruments")) {
+
+                JSONObject instruments = input.getJSONObject("instruments");
+                System.out.println("tjek lige instruments..");
+                System.out.println(instruments.length());
+
+                Iterator i = instruments.keys();
+
+                while (i.hasNext()) {
+                    String instrument = (String) i.next();
+                    JSONObject values = instruments.getJSONObject(instrument);
+
+                    System.out.println("hvad er values");
+                    System.out.println(values);
+
+
+
+                    String instrumentQuerypart = createInstrumentQuery(instrument, values);
+
+                    if (!instrumentQuerypart.equals("")) {
+                        if (instrumentQuery.equals("")) {
+                            instrumentQuery = "(" + instrumentQuerypart + ")";
+                        } else {
+                            instrumentQuery = instrumentQuery + " AND " + "(" + instrumentQuerypart + ")";
+                        }
+                    }
+                }
+
+                System.out.println("total query");
+                System.out.println(instrumentQuery);
+            }
+
+            if (!instrumentQuery.equals("")) {
+                query = query + " AND " + instrumentQuery;
             }
 
             System.out.println("the query");
@@ -613,6 +696,46 @@ public class GetPaginetedEntries extends AbstractWebScript {
         }
 
         JSONUtils.write(webScriptWriter, result);
+    }
+
+    public String createInstrumentQuery(String instrument, JSONObject values) throws JSONException {
+
+        String stdQuery = "@" + RMPSY_MODEL_PREFIX + "\\:" + instrument + ":";
+        String returnQuery = "";
+
+        ArrayList selected = new ArrayList();
+
+        Iterator keys = values.keys();
+
+        while (keys.hasNext()) {
+            String key = (String)keys.next();
+            if (values.getBoolean(key)) {
+
+                if (returnQuery.equals("")) {
+                    returnQuery = stdQuery + key;
+                }
+                else {
+                    returnQuery = returnQuery + " OR " + stdQuery + key;
+                }
+                selected.add(key);
+            }
+        }
+
+        System.out.println("selected for:" + instrument);
+        System.out.println(String.join(",", selected));
+
+        System.out.println("hvad er returnQuery");
+        System.out.println(returnQuery);
+
+
+
+//        switch (instrument) {
+//
+//            case PROP_PSYC_LIBRARY_PSYCH_TYPE:
+//                break;
+//        }
+
+        return returnQuery;
     }
 }
 

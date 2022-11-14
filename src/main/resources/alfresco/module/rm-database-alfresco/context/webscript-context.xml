@@ -67,6 +67,15 @@
 		<property name="userBean" ref="userBean"/>
 	</bean>
 
+	<bean id="webscript.entries.psyc.post" class="dk.magenta.webscripts.entry.Psyc" parent="webscript">
+		<property name="psycBean" ref="psycBean"/>
+		<property name="psycValuesBean" ref="psycValuesBean"/>
+		<property name="nodeService" ref="NodeService"/>
+		<property name="entryBean" ref="entryBean"/>
+		<property name="fileFolderService" ref="fileFolderService"/>
+		<property name="siteService" ref="siteService"/>
+	</bean>
+
 	<bean id="webscript.entries.waitinglist.get" class="dk.magenta.webscripts.entry.GetWaitingList" parent="webscript">
 		<property name="entryBean" ref="entryBean"/>
 		<property name="databaseBean" ref="databaseBean"/>
@@ -94,6 +103,14 @@
 		<property name="entryBean" ref="entryBean"/>
 	</bean>
 
+	<bean id="webscript.entries.deleteobservand.post" class="dk.magenta.webscripts.entry.DeleteObservand" parent="webscript">
+		<property name="entryBean" ref="entryBean"/>
+		<property name="nodeService" ref="nodeService"/>
+		<property name="siteService" ref="siteService"/>
+		<property name="lockService" ref="lockService"/>
+		<property name="authenticationService" ref="authenticationService"/>
+		<property name="personService" ref="PersonService"/>
+	</bean>
 
 	<bean id="webscript.entries.entry.unlock.put" class="dk.magenta.webscripts.entry.UnlockEntry" parent="webscript">
 		<property name="entryBean" ref="entryBean"/>
@@ -259,6 +276,7 @@
 
 	<bean id="webscript.contents.mergedoctemplate.post" class="dk.magenta.webscripts.contents.MergeDocTemplate" parent="webscript">
 		<property name="documentTemplateBean" ref="documentTemplateBean"/>
+		<property name="nodeService" ref="nodeService"/>
 	</bean>
 
 	<bean id="webscript.contents.mergebrevtemplate.post" class="dk.magenta.webscripts.contents.MergeBrevTemplate" parent="webscript">

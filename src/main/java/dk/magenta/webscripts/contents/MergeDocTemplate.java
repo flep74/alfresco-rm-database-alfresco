@@ -6,6 +6,7 @@ import dk.magenta.model.DatabaseModel;
 import dk.magenta.utils.JSONUtils;
 import org.alfresco.repo.security.authentication.AuthenticationUtil;
 import org.alfresco.service.cmr.repository.NodeRef;
+import org.alfresco.service.cmr.repository.NodeService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +29,15 @@ public class MergeDocTemplate extends AbstractWebScript {
 
     private DocumentTemplateBean documentTemplateBean;
     private JSONObject result;
+
+    public void setNodeService(NodeService nodeService) {
+        this.nodeService = nodeService;
+    }
+
+    private NodeService nodeService;
+
     Writer webScriptWriter;
+
 
 
     @Override
@@ -46,9 +55,22 @@ public class MergeDocTemplate extends AbstractWebScript {
         Map<String, String> params = JSONUtils.parseParameters(webScriptRequest.getURL());
 
         String nodeRef = params.get("nodeRef");
+        NodeRef node = new NodeRef("workspace://SpacesStore/" + json.get("id"));
 
+        String status = (String) nodeService.getProperty(node, DatabaseModel.PROP_STATUS);
 
-        if (json.has("type")) {
+            System.out.println("hvad er status");
+            System.out.println(status);
+
+        // todo check here for the state indlagt and handle accordingly and only for BUA
+        if ( !(nodeService.hasAspect(node, DatabaseModel.ASPECT_BUA)) && (status.equals(DatabaseModel.statusIndlagt) || status.equals(DatabaseModel.statusIndlagtGR)) ) {
+
+            String newDocument = documentTemplateBean.populateIndlagt(new NodeRef("workspace://SpacesStore/" + json.get("id")), (String) json.get("type"), (String) json.get("retten"), (String) json.get("dato"));
+            result = JSONUtils.getObject("id", newDocument.toString());
+            JSONUtils.write(webScriptWriter, result);
+
+        }
+        else if (json.has("type")) {
 
             AuthenticationUtil.setRunAsUserSystem();
 
@@ -64,8 +86,6 @@ public class MergeDocTemplate extends AbstractWebScript {
                     result = JSONUtils.getError(new Exception("wrong parameters supplied"));
                     JSONUtils.write(webScriptWriter, result);
                 }
-
-
             }
             else {
                 String newDocument = documentTemplateBean.populateDocument(new NodeRef("workspace://SpacesStore/" + json.get("id")), (String)json.get("type") , "", "" );

@@ -8,6 +8,7 @@ import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.security.AuthenticationService;
 import org.alfresco.service.cmr.security.PersonService;
+import org.alfresco.service.namespace.QName;
 import org.codehaus.groovy.transform.SourceURIASTTransformation;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,14 +18,16 @@ import org.springframework.extensions.webscripts.AbstractWebScript;
 import org.springframework.extensions.webscripts.WebScriptRequest;
 import org.springframework.extensions.webscripts.WebScriptResponse;
 
+import javax.xml.soap.Node;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+
+import static dk.magenta.model.DatabaseModel.ASPECT_EXPIRYUSER;
+import static dk.magenta.model.DatabaseModel.ASPECT_PSYCDATA;
 
 public class FlowChart extends AbstractWebScript {
 
@@ -130,6 +133,9 @@ public class FlowChart extends AbstractWebScript {
             jsonProperties = JSONUtils.getObject(json, "properties");
             String method = jsonProperties.getString("method");
 
+            System.out.println("hvad er method");
+            System.out.println(method);
+
             String sort = "";
             boolean desc = false;
 
@@ -226,6 +232,25 @@ public class FlowChart extends AbstractWebScript {
                 case "total":
                     userName = propertyValuesBean.getUserByUserName(authenticationService.getCurrentUserName());
                     result = flowChartBean.getTotals(siteShortName, defaultQuery, userName, buaQuery);
+                    break;
+                case "resetEditLock":
+
+                    System.out.println("json?");
+                    System.out.println(jsonProperties);
+
+                    String cpr = jsonProperties.getString("cpr");
+                    cpr = cpr.replace("-","");
+                    String sagsnr = jsonProperties.getString("caseNumber");
+
+                    String query = "@rm\\:caseNumber:\"" + sagsnr + "\" AND ";
+                    query = query + "@rm\\:cprNumber:\"" + cpr + "\"";
+
+                    System.out.println("hvad er query");
+                    System.out.println(query);
+
+                    NodeRef declaration = entryBean.getEntry(query);
+
+                    flowChartBean.resetReadOnlyLock(declaration);
                     break;
             }
         } catch (JSONException e) {
