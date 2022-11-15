@@ -427,9 +427,65 @@ public class PrintBean {
             row.getCellByIndex(0).setFont(font);
         }
 
+        if (!doctor.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Læge: " + doctor);
+            row.getCellByIndex(0).setFont(font);
+        }
 
+        if (!socialworker.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Socialrådgiver: " + socialworker);
+            row.getCellByIndex(0).setFont(font);
+        }
 
+        if (!supervisingDoctor.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Tiltrædes af læge: " + supervisingDoctor);
+            row.getCellByIndex(0).setFont(font);
+        }
 
+        if (!declarationFromDate.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Erklæring afgivet fra dato: " + declarationFromDate);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!declarationToDate.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Erklæring afgivet til dato: " + declarationToDate);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!noDeclaration.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Erklæring fra dato: " + noDeclaration);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!noDeclaration.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Afsluttet uden erklæring: " + noDeclaration);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!koen.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Køn: " + koen);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!cpr.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Cpr: " + cpr);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+        if (!firstName.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Fornavn: " + firstName);
+            row.getCellByIndex(0).setFont(font);
+        }
         return table;
     }
 
