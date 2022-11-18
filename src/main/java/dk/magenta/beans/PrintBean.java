@@ -366,7 +366,7 @@ public class PrintBean {
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
 
         Row row = table.getRowByIndex(0);
-        row.getCellByIndex(0).addParagraph("udskrevet den " + outputFormatter.format(LocalDateTime.now()));
+        row.getCellByIndex(0).addParagraph("søgning afgivet  " + outputFormatter.format(LocalDateTime.now()));
         row.getCellByIndex(0).setHorizontalAlignment(StyleTypeDefinitions.HorizontalAlignmentType.RIGHT);
 
         Font fontItaliz = new Font("Arial", StyleTypeDefinitions.FontStyle.BOLDITALIC, 12, Color.BLACK);
