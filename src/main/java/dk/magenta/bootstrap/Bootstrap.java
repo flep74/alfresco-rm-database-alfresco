@@ -4,6 +4,7 @@ import dk.magenta.beans.*;
 import dk.magenta.model.DatabaseModel;
 import dk.magenta.utils.JSONUtils;
 import org.alfresco.repo.security.authentication.AuthenticationUtil;
+import org.alfresco.service.cmr.model.FileFolderService;
 import org.alfresco.service.cmr.model.FileNotFoundException;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.StoreRef;
@@ -36,6 +37,12 @@ public class Bootstrap extends AbstractLifecycleBean {
     public void setPropertyValuesBean(PropertyValuesBean propertyValuesBean) {
         this.propertyValuesBean = propertyValuesBean;
     }
+
+    public void setFileFolderService(FileFolderService fileFolderService) {
+        this.fileFolderService = fileFolderService;
+    }
+
+    private FileFolderService fileFolderService;
 
     public void setPsycValuesBean(PsycValuesBean psycValuesBean) {
         this.psycValuesBean = psycValuesBean;
@@ -97,9 +104,18 @@ public class Bootstrap extends AbstractLifecycleBean {
         System.out.println("starting bootstrap");
 
         transactionService.getRetryingTransactionHelper().doInTransaction(() -> {
-                psycBean.createAllData();
+
+                SiteInfo siteInfo = siteService.getSite("retspsyk");
+                NodeRef psycLibrary = fileFolderService.searchSimple(siteInfo.getNodeRef(), DatabaseModel.PROP_PSYC_LIBRARY);
+
+                if (psycLibrary == null) {
+                    psycBean.createAllData();
+                    System.out.println("datastructure for psycValues created...");
+                }
+
                 try {
                     psycValuesBean.loadPropertyValues();
+                    System.out.println("psycValues loaded...");
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 } catch (FileNotFoundException e) {

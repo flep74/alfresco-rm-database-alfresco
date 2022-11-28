@@ -68,6 +68,7 @@
         <property name="permissionService" ref="PermissionService"/>
         <property name="psycBean" ref="psycBean"/>
         <property name="psycValuesBean" ref="psycValuesBean"/>
+        <property name="fileFolderService" ref="fileFolderService"/>
         <property name="transactionService" ref="transactionService"/>
     </bean>
 
