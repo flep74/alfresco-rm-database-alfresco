@@ -185,9 +185,11 @@ public class EntryBean {
             ChildAssociationRef child = (ChildAssociationRef)i.next();
             try {
                 FileInfo newNode = fileFolderService.copy(child.getChildRef(), nodeRef, (String)nodeService.getProperty(child.getChildRef(), ContentModel.PROP_NAME));
-                nodeService.addAspect(newNode.getNodeRef(),ContentModel.ASPECT_HIDDEN,null);
 
-
+                // RITM0818252_newTemplate
+                if (!((String)nodeService.getProperty(child.getChildRef(), ContentModel.PROP_NAME)).equals(DatabaseModel.PROP_PSYKOPS_TEMPLATE)) {
+                    nodeService.addAspect(newNode.getNodeRef(),ContentModel.ASPECT_HIDDEN,null);
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

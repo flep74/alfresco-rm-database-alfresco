@@ -198,6 +198,9 @@ public interface DatabaseModel {
     String PROP_BERIGTIGELSE = "berigtigelse.odt";
     String PROP_SUPPLERENDEUDTALELSE_FOLDER = "Supplerende udtalelse";
     String PROP_SUPPLERENDEUDTALELSE = "supplerendeudtalelse.odt";
+
+    String PROP_PSYKOPS_TEMPLATE = "psyk_us.odt";
+
     String PROP_FLETTEBREV = "flettebrev.odt";
 
     // template docs
