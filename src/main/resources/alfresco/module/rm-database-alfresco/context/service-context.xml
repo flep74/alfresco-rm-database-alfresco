@@ -13,7 +13,7 @@
         <property name="fileFolderService" ref="FileFolderService"/>
         <property name="auditComponent" ref="auditComponent"/>
         <property name="authenticationService" ref="authenticationService"/>
-        <property name="DocumentTemplateBean" ref="DocumentTemplateBean"/>
+        <property name="DocumentTemplateBean" ref="documentTemplateBean"/>
     </bean>
 
     <bean id="propertyValuesBean" class="dk.magenta.beans.PropertyValuesBean">

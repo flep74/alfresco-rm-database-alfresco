@@ -449,7 +449,7 @@ public class DocumentTemplateBean {
 
         NodeRef nodeRef_templateFolder = siteService.getContainer(DatabaseModel.TYPE_PSYC_SITENAME, DatabaseModel.PROP_TEMPLATE_LIBRARY);
 
-        List<String> list = Arrays.asList(DatabaseModel.PROP_SAMTYKKE_TDL_KONTAKT);
+        List<String> list = Arrays.asList(DatabaseModel.PROP_PSYKOPS_TEMPLATE);
         List<ChildAssociationRef> children = nodeService.getChildrenByName(nodeRef_templateFolder, ContentModel.ASSOC_CONTAINS, list);
 
         NodeRef templateDoc = children.get(0).getChildRef();
