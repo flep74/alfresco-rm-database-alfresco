@@ -48,6 +48,12 @@ public class EntryBean {
     private LockService lockService;
     private AuditComponent auditComponent;
 
+    public void setDocumentTemplateBean(DocumentTemplateBean documentTemplateBean) {
+        this.documentTemplateBean = documentTemplateBean;
+    }
+
+    private DocumentTemplateBean documentTemplateBean;
+
     public void setAuthenticationService(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
@@ -166,12 +172,7 @@ public class EntryBean {
                 nodeService.createNode(dayRef, ContentModel.ASSOC_CONTAINS, nameQName, typeQName, properties);
         NodeRef nodeRef = childAssociationRef.getChildRef();
 
-
-
-
-
         // add the contents of the documenttemplate library
-
         AuthenticationUtil.setAdminUserAsFullyAuthenticatedUser();
 
         NodeRef nodeRef_documentsTemplateFolder = siteService.getContainer(siteShortName, DatabaseModel.PROP_TEMPLATE_LIBRARY);
@@ -186,7 +187,6 @@ public class EntryBean {
             try {
                 FileInfo newNode = fileFolderService.copy(child.getChildRef(), nodeRef, (String)nodeService.getProperty(child.getChildRef(), ContentModel.PROP_NAME));
                 nodeService.addAspect(newNode.getNodeRef(),ContentModel.ASPECT_HIDDEN,null);
-
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -229,6 +229,15 @@ public class EntryBean {
 
         nodeService.addAspect(nodeRef, DatabaseModel.ASPECT_BEREGNETKOEN, null);
         nodeService.setProperty(nodeRef, DatabaseModel.PROP_KOEN, (number % 2 == 0) ? "K" : "M");
+
+        // #RITM0818252
+        if (!bua) {
+            try {
+                documentTemplateBean.generatePSYKUS(nodeRef);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         return nodeRef;
     }
