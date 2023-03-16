@@ -194,7 +194,7 @@ public interface DatabaseModel {
     String PROP_PSYCOLOGICALDOCUMENT = "Psyk test.odt";
     String PROP_PSYCOLOGICALDOCUMENT_BUA = "Psyk test_bua.odt";
 
-    String PROP_SAMTYKKE_TDL_KONTAKT = "samtykketidkontakt.odt";
+    String PROP_SAMTYKKE_TDL_KONTAKT = "samtykkeerklæring.odt";
     String PROP_BERIGTIGELSE = "berigtigelse.odt";
     String PROP_SUPPLERENDEUDTALELSE_FOLDER = "Supplerende udtalelse";
     String PROP_SUPPLERENDEUDTALELSE = "supplerendeudtalelse.odt";
