@@ -469,7 +469,10 @@ public class DocumentTemplateBean {
 
         // make the new document below the case
 
-        FileInfo newFile = fileFolderService.create(declaration, info.cpr.substring(0,6) + "_psykundersøgelse.odt", ContentModel.TYPE_CONTENT);
+        // #RITM0818252 - template should be saved in the new folder, Erklaering og Psykologisk rapport
+        NodeRef folder = fileFolderService.searchSimple(declaration, DatabaseModel.ATTR_DEFAULT_DECLARATION_FOLDER);
+
+        FileInfo newFile = fileFolderService.create(folder, info.cpr.substring(0,6) + "_psykundersøgelse.odt", ContentModel.TYPE_CONTENT);
 
         ContentWriter writer = contentService.getWriter(newFile.getNodeRef(), ContentModel.PROP_CONTENT, true);
         writer.setMimetype("application/vnd.oasis.opendocument.text");
