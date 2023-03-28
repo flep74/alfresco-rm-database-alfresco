@@ -354,7 +354,26 @@ public class GetPaginetedEntries extends AbstractWebScript {
             if (input.has("supervisingDoctor")) {
                 JSONObject o = new JSONObject();
                 o.put("key", "supervisingDoctor");
-                o.put("value", input.get("supervisingDoctor"));
+
+
+                JSONArray jsonArray = input.getJSONArray("supervisingDoctor");
+                String queryStringSupervisingDoctor = "";
+
+                for (int i=0; i <= jsonArray.length()-1;i++) {
+
+                    // hack to support the import of the names without titles in the old system
+                    String supervisingDoctor = (String) jsonArray.get(i);
+//                    doctor = doctor.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
+
+                    if (i == 0) {
+                        queryStringSupervisingDoctor = queryStringSupervisingDoctor + "\"" + supervisingDoctor + "\"";
+                    }
+                    else {
+                        queryStringSupervisingDoctor = queryStringSupervisingDoctor + " "  + "\"" + supervisingDoctor + "\"";
+                    }
+                }
+
+                o.put("value", "(" + queryStringSupervisingDoctor + ")");
                 o.put("include", true);
                 queryArray.put(o);
             }
