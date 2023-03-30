@@ -103,7 +103,6 @@
 		<property name="entryBean" ref="entryBean"/>
 	</bean>
 
-
 	<bean id="webscript.entries.deleteobservand.post" class="dk.magenta.webscripts.entry.DeleteObservand" parent="webscript">
 		<property name="entryBean" ref="entryBean"/>
 		<property name="nodeService" ref="nodeService"/>

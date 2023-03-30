@@ -67,6 +67,8 @@ public class GetPaginetedEntries extends AbstractWebScript {
         Writer webScriptWriter = res.getWriter();
         JSONObject result = new JSONObject();
 
+        JSONObject searchQueriesForPdf = new JSONObject();
+
         try {
             String siteShortName = templateArgs.get("siteShortName");
             int skip = Integer.valueOf(req.getParameter("skip"));
@@ -80,7 +82,12 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
             // setup query
 
+
+
             JSONObject input = new JSONObject(c.getContent());
+            System.out.println("hvad er input");
+            System.out.println(input);
+
             System.out.println("hvad er input");
             System.out.println(input);
 
@@ -95,14 +102,14 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 JSONObject o = new JSONObject();
 
                 String f_formattedDate = (String)input.get("createdFromDate");
+                searchQueriesForPdf.put("createdFromDate", f_formattedDate);
 
                 o.put("key", "creationDate");
 
                 if (input.has("createdToDate")) {
-
-
                     String t_formattedDate = (String)input.get("createdToDate");
                     o.put("value", QueryUtils.dateRangeQuery(f_formattedDate, t_formattedDate));
+                    searchQueriesForPdf.put("createdToDate", t_formattedDate);
                 }
                 else {
                     o.put("value", QueryUtils.dateRangeQuery(f_formattedDate, "MAX"));
@@ -114,6 +121,8 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 JSONObject o = new JSONObject();
 
                 String t_formattedDate = (String)input.get("createdToDate");
+                searchQueriesForPdf.put("createdToDate", t_formattedDate);
+
                 o.put("key", "creationDate");
                 o.put("value", QueryUtils.dateRangeQuery("MIN",t_formattedDate));
                 o.put("include", true);
@@ -191,6 +200,30 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("key", QueryUtils.mapWaitingType(input.getJSONObject("waitingTime").getString("time")));
                 o.put("value", QueryUtils.waitingQuery(input.getJSONObject("waitingTime").getInt("days"), input.getJSONObject("waitingTime").getString("modifier")));
                 o.put("include", true);
+
+
+
+                String time = input.getJSONObject("waitingTime").getString("time");
+                int days = (input.getJSONObject("waitingTime").getInt("days"));
+                String modifier = input.getJSONObject("waitingTime").getString("modifier");
+
+
+                HashMap<String, String> ventetidMapping = new HashMap();
+                ventetidMapping.put("passive","passiv ventetid");
+                ventetidMapping.put("active","aktiv ventetid");
+                ventetidMapping.put("total","samlet ventetid");
+
+                System.out.println("time");
+                System.out.println(time);
+
+                System.out.println("days");
+                System.out.println(days);
+
+                System.out.println("modifier");
+                System.out.println(modifier);
+
+                searchQueriesForPdf.put("waitingTime", ventetidMapping.get(time) + " " + modifier + " " + days + " dag(e)" );
+
                 queryArray.put(o);
             }
 
@@ -206,6 +239,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                         queryStringMainCharge = queryStringMainCharge + " "  + "\"" +(String) jsonArray.get(i) + "\"";
                     }
                 }
+                searchQueriesForPdf.put("mainCharge", input.getJSONArray("mainCharge").toString());
 
                 JSONObject o = new JSONObject();
                 o.put("key", "mainCharge");
@@ -234,6 +268,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                         queryStringSanctionProp = queryStringSanctionProp + " "  + "\"" + sanctionProposal + "\"";
                     }
                 }
+                searchQueriesForPdf.put("sanctionProposal", input.getJSONArray("sanctionProposal").toString());
 
                 o.put("value", "(" + queryStringSanctionProp + ")");
                 o.put("include", true);
@@ -259,7 +294,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                         queryStringPlacement = queryStringPlacement + " "  + "\"" + placement + "\"";
                     }
                 }
-
+                searchQueriesForPdf.put("placement", input.getJSONArray("placement").toString());
 
                 o.put("value", "(" + queryStringPlacement + ")");
                 o.put("include", true);
@@ -278,6 +313,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                         queryStringMainCharge = queryStringMainCharge + " "  + "\"" +(String) jsonArray.get(i) + "\"";
                     }
                 }
+                searchQueriesForPdf.put("mainDiagnosis", input.getJSONArray("mainDiagnosis").toString());
 
                 JSONObject o = new JSONObject();
                 o.put("key", "mainDiagnosis");
@@ -300,6 +336,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     }
                 }
 
+                searchQueriesForPdf.put("status", input.getJSONArray("status").toString());
 
                 JSONObject o = new JSONObject();
                 o.put("key", "status");
@@ -391,6 +428,8 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("key", "closed");
 
                 String theValue = input.getString("closed");
+
+                searchQueriesForPdf.put("closed", input.getString("closed"));
 
                 if (theValue.equals("OPEN")) {
                     o.put("value", true);
@@ -544,6 +583,9 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     query = query + " AND -ASPECT:\"rm:bua\"";
                 }
             }
+            else {
+                searchQueriesForPdf.put("searchType", "alle");
+            }
 
 
 
@@ -652,7 +694,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
             }
 
             if (input.has("preview")) {
-                String nodeRef = printBean.printEntriesToPDF(entries);
+                String nodeRef = printBean.printEntriesToPDF(entries, searchQueriesForPdf);
                 result.put("nodeRef", nodeRef);
             }
             else {
