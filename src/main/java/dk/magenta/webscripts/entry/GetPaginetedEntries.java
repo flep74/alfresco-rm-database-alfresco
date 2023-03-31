@@ -214,6 +214,17 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 queryArray.put(o);
             }
 
+            if (input.has("forvaring")) {
+                JSONObject o = new JSONObject();
+                o.put("key", "forvaring");
+
+                o.put("value", input.get("forvaring"));
+                o.put("include", true);
+                queryArray.put(o);
+
+            }
+
+
             if (input.has("sanctionProposal")) {
 
                 JSONObject o = new JSONObject();

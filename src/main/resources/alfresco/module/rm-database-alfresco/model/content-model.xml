@@ -317,6 +317,11 @@
                     <type>d:text</type>
                 </property>
 
+                <property name="rm:forvaring">
+                    <title>forvaring</title>
+                    <type>d:boolean</type>
+                </property>
+
 
 
             </properties>
