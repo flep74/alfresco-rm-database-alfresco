@@ -457,6 +457,16 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 queryArray.put(o);
             }
 
+            if (input.has("lastName")) {
+                String fornavn = input.getString("lastName");
+                JSONObject o = new JSONObject();
+
+                o.put("key", "lastName");
+                o.put("value", fornavn + "*");
+                o.put("include", true);
+                queryArray.put(o);
+            }
+
             if (input.has("cpr")) {
                 String cpr = input.getString("cpr");
                 JSONObject o = new JSONObject();
