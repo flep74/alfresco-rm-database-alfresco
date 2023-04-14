@@ -142,9 +142,12 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 if (input.has("returnOfDeclarationToDate")) {
                     String t_formattedDate = (String)input.get("returnOfDeclarationToDate");
                     o.put("value", QueryUtils.dateRangeQuery(f_formattedDate, t_formattedDate));
+                    searchQueriesForPdf.put("returnOfDeclarationToDate", QueryUtils.dateRangeQuery(f_formattedDate, t_formattedDate));
+
                 }
                 else {
                     o.put("value", QueryUtils.dateRangeQuery(f_formattedDate, "MAX"));
+                    searchQueriesForPdf.put("returnOfDeclarationToDate", "MAX");
                 }
                 o.put("include", true);
                 queryArray.put(o);
@@ -157,6 +160,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("value", QueryUtils.dateRangeQuery("MIN",t_formattedDate));
                 o.put("include", true);
                 queryArray.put(o);
+                searchQueriesForPdf.put("returnOfDeclarationDate", QueryUtils.dateRangeQuery("MIN",t_formattedDate));
             }
 
 
@@ -180,9 +184,11 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 }
                 else {
                     o.put("value", QueryUtils.dateRangeQuery(f_formattedDate, "MAX"));
+
                 }
                 o.put("include", true);
                 queryArray.put(o);
+                searchQueriesForPdf.put("declarationFromDate", f_formattedDate);
             }
             else if (input.has("declarationToDate")) {
                 JSONObject o = new JSONObject();
@@ -192,6 +198,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("value", QueryUtils.dateRangeQuery("MIN",t_formattedDate));
                 o.put("include", true);
                 queryArray.put(o);
+                searchQueriesForPdf.put("declarationToDate", t_formattedDate);
             }
 
 
@@ -336,13 +343,15 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     }
                 }
 
-                searchQueriesForPdf.put("status", input.getJSONArray("status").toString());
+
 
                 JSONObject o = new JSONObject();
                 o.put("key", "status");
                 o.put("value", "(" + queryStringMainCharge + ")");
                 o.put("include", true);
                 queryArray.put(o);
+
+                searchQueriesForPdf.put("status", input.getJSONArray("status").toString());
             }
 
             if (input.has("givenDeclaration")) {
@@ -386,6 +395,8 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("value", "(" + queryStringDoctor + ")");
                 o.put("include", true);
                 queryArray.put(o);
+
+                searchQueriesForPdf.put("doctor", input.getJSONArray("doctor").toString());
             }
 
             if (input.has("supervisingDoctor")) {
@@ -413,6 +424,8 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("value", "(" + queryStringSupervisingDoctor + ")");
                 o.put("include", true);
                 queryArray.put(o);
+
+                searchQueriesForPdf.put("supervisingDoctor", input.getJSONArray("supervisingDoctor").toString());
             }
 
             if (input.has("noDeclaration")) {
@@ -493,6 +506,8 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("value", "(" + queryStringPsychologist + ")");
                 o.put("include", true);
                 queryArray.put(o);
+
+                searchQueriesForPdf.put("psychologist", input.getJSONArray("psychologist").toString());
             }
 
             if (input.has("socialEval")) {
@@ -513,6 +528,8 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("value", fornavn + "*");
                 o.put("include", true);
                 queryArray.put(o);
+
+                searchQueriesForPdf.put("firstName", input.getString("firstName"));
             }
 
             if (input.has("cpr")) {
@@ -523,6 +540,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("value", cpr + "*");
                 o.put("include", true);
                 queryArray.put(o);
+                searchQueriesForPdf.put("cpr", input.getString("cpr").toString());
             }
 
             if (input.has("koen")) {
@@ -535,7 +553,12 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     o.put("value", koen);
                     o.put("include", true);
                     queryArray.put(o);
+
+                    searchQueriesForPdf.put("koen", input.getJSONArray("koen").toString());
+                } else {
+                    searchQueriesForPdf.put("koen", "begge");
                 }
+
             }
 
             if (input.has("socialworker")) {
@@ -566,6 +589,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 o.put("value", "(" + queryStringSocialworker + ")");
                 o.put("include", true);
                 queryArray.put(o);
+                searchQueriesForPdf.put("socialworker", input.getJSONArray("socialworker").toString());
             }
 
             org.json.JSONArray entries = new org.json.JSONArray();
@@ -578,9 +602,11 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 String bua = input.getString("bua");
                 if (bua.equals("BUA")) {
                     query = query + " AND +ASPECT:\"rm:bua\"";
+                    searchQueriesForPdf.put("searchType", "bua");
                 }
                 else if (bua.equals("PS")) {
                     query = query + " AND -ASPECT:\"rm:bua\"";
+                    searchQueriesForPdf.put("searchType", "ps");
                 }
             }
             else {
@@ -694,6 +720,8 @@ public class GetPaginetedEntries extends AbstractWebScript {
             }
 
             if (input.has("preview")) {
+                System.out.println("hvad er searchQueriesForPdf");
+                System.out.println(searchQueriesForPdf);
                 String nodeRef = printBean.printEntriesToPDF(entries, searchQueriesForPdf);
                 result.put("nodeRef", nodeRef);
             }

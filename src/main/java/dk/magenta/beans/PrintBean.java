@@ -265,6 +265,12 @@ public class PrintBean {
 
         Font font = new Font("Arial", StyleTypeDefinitions.FontStyle.REGULAR, 6, Color.BLACK);
 
+        String searchType = "";
+        if (jsonObject.has("searchType")) {
+            searchType = jsonObject.getString("searchType");
+        }
+
+
         String from = "";
         if (jsonObject.has("createdFromDate")) {
             from = jsonObject.getString("createdFromDate");
@@ -373,6 +379,12 @@ public class PrintBean {
         row.getCellByIndex(0).setFont(fontItaliz);
 
 
+        // always add searchType variable
+        row = table.getRowByIndex(1);
+        row.getCellByIndex(0).addParagraph(searchType);
+        row.getCellByIndex(0).setFont(font);
+
+
         if (!from.equals("")) {
             row = table.getRowByIndex(1);
             row.getCellByIndex(0).addParagraph("Fra dato: " + from);
@@ -423,7 +435,7 @@ public class PrintBean {
 
         if (!psychologist.equals("")) {
             row = table.getRowByIndex(1);
-            row.getCellByIndex(0).addParagraph("Psykolog: " + status);
+            row.getCellByIndex(0).addParagraph("Psykolog: " + psychologist);
             row.getCellByIndex(0).setFont(font);
         }
 
@@ -473,6 +485,12 @@ public class PrintBean {
             row = table.getRowByIndex(1);
             row.getCellByIndex(0).addParagraph("Køn: " + koen);
             row.getCellByIndex(0).setFont(font);
+        }
+        else {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("begge køn");
+            row.getCellByIndex(0).setFont(font);
+
         }
 
         if (!cpr.equals("")) {
