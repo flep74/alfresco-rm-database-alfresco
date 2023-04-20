@@ -575,7 +575,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     o.put("include", true);
                     queryArray.put(o);
 
-                    searchQueriesForPdf.put("koen", input.getJSONArray("koen").toString());
+                    searchQueriesForPdf.put("koen", input.getString("koen").toString());
                 } else {
                     searchQueriesForPdf.put("koen", "begge");
                 }
