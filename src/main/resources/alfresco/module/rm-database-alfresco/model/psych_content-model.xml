@@ -45,6 +45,19 @@
     <!-- Aspects -->
     <aspects>
 
+        <aspect name="rmpsy:psycTypeCounter">
+            <title>primary key for the psyctypes</title>
+            <properties>
+
+            <property name="rmpsy:psykologisk_undersoegelsestype_counter">
+                <title>counter</title>
+                <type>d:text</type>
+                <multiple>true</multiple>
+            </property>
+            </properties>
+        </aspect>
+
+
         <aspect name="rmpsy:psyc">
             <title>psyc data</title>
             <properties>

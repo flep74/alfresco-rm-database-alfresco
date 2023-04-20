@@ -302,6 +302,8 @@ public interface DatabaseModel {
 
     QName ASPECT_PSYCDATA = QName.createQName(RMPSY_MODEL_URI, "psyc");
 
+
+
     QName PROPQNAME_PSYCDATA_PSYCH_TYPE = QName.createQName(RMPSY_MODEL_URI, "psykologisk_undersoegelsestype");
 
     QName PROPQNAME_PSYCDATA_INTERVIEWRATING = QName.createQName(RMPSY_MODEL_URI, "psykiatriske_interviews_og_ratingscales");
@@ -315,9 +317,16 @@ public interface DatabaseModel {
     QName PROPQNAME_PSYCDATA_KONKLUSION_TAGS = QName.createQName(RMPSY_MODEL_URI, "konklusion_tags");
     QName PROPQNAME_PSYCDATA_KONKLUSION_FREETEXT = QName.createQName(RMPSY_MODEL_URI, "konklusion_freetext");
 
+
+    QName ASPECT_PSYCDATA_COUNTER = QName.createQName(RMPSY_MODEL_URI, "psycTypeCounter");
+    QName PROPQNAME_PSYCDATA_UNDERSOEGELSESTYPE_COUNTER = QName.createQName(RMPSY_MODEL_URI, "psykologisk_undersoegelsestype_counter");
+
+
     // types
 
     QName TYPE_ANVENDTUNDERSOEGELSESINST = QName.createQName(RMPSY_MODEL_URI, "anvendtUndersoegelsesinst");
     QName PROP_ANVENDTUNDERSOEGELSESINST_ID = QName.createQName(RMPSY_MODEL_URI, "id_anvendtUndersoegelsesinst");
     QName PROP_ANVENDTUNDERSOEGELSESINST_NAME = QName.createQName(RMPSY_MODEL_URI, "name_anvendtUndersoegelsesinst");
+
+
 }

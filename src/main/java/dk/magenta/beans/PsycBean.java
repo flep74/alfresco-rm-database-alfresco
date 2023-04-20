@@ -425,6 +425,11 @@ public class PsycBean {
         this.createDataForKonklusionTags();
     }
 
+
+    private int getNextPsycTypeId() {
+        return 0;
+    }
+
     public void createRootFolders() {
 
         SiteInfo siteInfo = siteService.getSite("retspsyk");
@@ -441,6 +446,11 @@ public class PsycBean {
 
         fileFolderService.create(psycLibrary, PROP_PSYC_LIBRARY_PSYCH_MALERING, ContentModel.TYPE_FOLDER).getNodeRef();
         fileFolderService.create(psycLibrary, PROP_PSYC_LIBRARY_KONKLUSION_TAGS, ContentModel.TYPE_FOLDER).getNodeRef();
+
+        // init the primary key counter for the types
+        nodeService.addAspect(psycLibrary, ASPECT_PSYCDATA_COUNTER,null);
+        int counter = 0;
+        nodeService.setProperty(psycLibrary, DatabaseModel.PROPQNAME_PSYCDATA_UNDERSOEGELSESTYPE_COUNTER, counter);
     }
 
     public void updateKonklusionText(NodeRef obs, String text) {
