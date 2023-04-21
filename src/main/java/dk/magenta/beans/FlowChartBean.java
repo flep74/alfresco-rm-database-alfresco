@@ -553,7 +553,9 @@ public class FlowChartBean {
                 e.put("node_uuid", tmp.get("node-uuid"));
             }
 
-
+            if (tmp.has("forvaring")) {
+                e.put("forvaring", tmp.get("forvaring"));
+            }
 
             if (tmp.has("firstName")) {
                 e.put("firstName", tmp.get("firstName"));
