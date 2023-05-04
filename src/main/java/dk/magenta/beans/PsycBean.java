@@ -83,21 +83,25 @@ public class PsycBean {
 
     public void createDataForPSYCHTYPES() {
 
-        ArrayList<String> values = new ArrayList<>();
-        values.add("Psykoseudredning");
-        values.add("Intelligensudredning");
-        values.add("Personlighedsudredning");
-        values.add("Neuropsykologisk funktionsudredning");
-        values.add("Udredning for udviklingsforstyrrelse");
+        System.out.println("opretter instrument: psykologiskeundersøgelsestyper");
 
-        values.add("Farligheds-og risikovurdering");
-        values.add("Udredning for malingering");
+        ArrayList<String> values = new ArrayList<>();
+        values.add("Psykotiske sindslidelser eller tilstande");
+        values.add("Grundlæggende begavelsesniveau");
+        values.add("Personlighedsmæssige abnormaliteter");
+        values.add("Organiske og neurologiske lidelser");
+        values.add("Neuro-udviklingsforstyrrelser");
+
+        values.add("Malingering (simulation og dissimulation");
+        values.add("Risko for recidiv til ligeartet eller lignende kriminalitet (farlighed)");
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_PSYCH_TYPE);
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
+            System.out.println("name: " + name);
+            System.out.println("id: " + id);
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -145,7 +149,7 @@ public class PsycBean {
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -209,7 +213,7 @@ public class PsycBean {
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -234,7 +238,7 @@ public class PsycBean {
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -273,7 +277,7 @@ public class PsycBean {
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -299,7 +303,7 @@ public class PsycBean {
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -350,7 +354,7 @@ public class PsycBean {
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -377,7 +381,7 @@ public class PsycBean {
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -400,7 +404,7 @@ public class PsycBean {
 
         for (int i=0; i<=values.size()-1;i++ ) {
             String name = values.get(i);
-            String id = String.valueOf(i);
+            String id = this.getNextPsycTypeId();
 
             Map<QName, Serializable> props = new HashMap<>();
             props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -414,20 +418,43 @@ public class PsycBean {
 
     public void createAllData() {
         this.createRootFolders();
-        this.createDataForPSYCHTYPES();
-        this.createDataForInterviewRating();
-        this.createDataForKognitivRating();
-        this.createDataForImplicit();
-        this.createDataForEksplicit();
-        this.createDataForRisiko();
-        this.createDataForMalingering();
-        this.createDataForPsykMalering();
+        this.createDataForPSYCHTYPES(); //ok
+        this.createDataForInterviewRating(); // ok
+        this.createDataForKognitivRating(); // ok
+        this.createDataForImplicit(); // ok
+        this.createDataForEksplicit(); // ok
+        this.createDataForRisiko(); // ok
+        this.createDataForMalingering(); // ok
+        this.createDataForPsykMalering(); // ok
         this.createDataForKonklusionTags();
     }
 
 
-    private int getNextPsycTypeId() {
-        return 0;
+    //todo lav mulighed for at senere at tilføje nye instrumenter
+
+    private String getNextPsycTypeId() {
+
+        // hent noderef for documentlibrary under retspsyk
+        SiteInfo siteInfo = siteService.getSite("retspsyk");
+        NodeRef documentlibrary = siteService.getContainer(siteInfo.getShortName(), "documentlibrary");
+
+        int value;
+        if (!nodeService.hasAspect(documentlibrary, ASPECT_PSYCDATA_COUNTER)) {
+            System.out.println("der mangler en counter");
+            Map<QName, Serializable> prop = new HashMap<>();
+            prop.put(DatabaseModel.PROPQNAME_PSYCDATA_UNDERSOEGELSESTYPE_COUNTER, 1);
+            nodeService.addAspect(documentlibrary, ASPECT_PSYCDATA_COUNTER,prop);
+            value = 1;
+        }
+        else {
+            value = (int)nodeService.getProperty(documentlibrary,DatabaseModel.PROPQNAME_PSYCDATA_UNDERSOEGELSESTYPE_COUNTER);
+            value = value +1;
+            nodeService.setProperty(documentlibrary,DatabaseModel.PROPQNAME_PSYCDATA_UNDERSOEGELSESTYPE_COUNTER, value);
+        }
+
+        System.out.println("hvad er value som kommer tilbage: " + value);
+
+        return String.valueOf(value);
     }
 
     public void createRootFolders() {
