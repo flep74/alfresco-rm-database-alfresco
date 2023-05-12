@@ -181,20 +181,47 @@ public class Psyc extends AbstractWebScript {
                     if (nodeService.hasAspect(observand, ASPECT_PSYCDATA) && (nodeService.getProperty(observand, instrumentQname) != null)) {
 
                         ArrayList idPsycData = (ArrayList) nodeService.getProperty(observand, QName.createQName(RMPSY_MODEL_URI, instrument));
+
+                        System.out.println("hvad er de valgte idPsycDate:");
+                        System.out.println(idPsycData);
+
+
                         ArrayList formattedList = new ArrayList<String>(Arrays.asList(((String)idPsycData.get(0)).split(",")));
                         ArrayList mappedValues = new ArrayList();
 
+                        // get all the values for this instrument and setup which are selected
+                        JSONObject values = psycValuesBean.getValuesForInstrument(instrument);
+                        JSONArray valuesArray = (JSONArray) values.get("values");
 
-                        // setup the totallist of id: xx, label: xx, val: xx
-                        for (int k=0; k<=psycValuesBean.getLengthOfInstrumentList(instrument)-1;k++) {
+                        for (int i=0; i<= valuesArray.length()-1;i++) {
+                            JSONObject val = (JSONObject) valuesArray.get(i);
 
-                            JSONObject entry = new JSONObject();
-                            entry.put("id",k);
-                            entry.put("label",psycValuesBean.mapIdToLabel(String.valueOf(k), instrument));
-                            entry.put("val", formattedList.contains(String.valueOf(k)) ? true : false);
+                            JSONObject instO = new JSONObject();
+                            instO.put("id",val.getString("id"));
+                            instO.put("label", val.getString("name"));
+                            instO.put("val", formattedList.contains(String.valueOf(val.getString("id"))) ? true : false);
+                            //instO.put("val",false);
 
-                            mappedValues.add(entry);
+                            mappedValues.add(instO);
+
+
                         }
+
+
+//                        // setup the totallist of id: xx, label: xx, val: xx
+//                        for (int k=0; k<=psycValuesBean.getLengthOfInstrumentList(instrument)-1;k++) {
+//
+//
+//
+//
+//
+//                            JSONObject entry = new JSONObject();
+//                            entry.put("id",k);
+//                            entry.put("label",psycValuesBean.mapIdToLabel(String.valueOf(k), instrument));
+//                            entry.put("val", formattedList.contains(String.valueOf(k)) ? true : false);
+//
+//                            mappedValues.add(entry);
+//                        }
 
                         // sort by label
                         Collections.sort(mappedValues, new Comparator<JSONObject>() {
