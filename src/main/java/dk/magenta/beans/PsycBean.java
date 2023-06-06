@@ -63,14 +63,30 @@ public class PsycBean {
         }
     }
 
+
+    public String newItemInCategory(String category, String itemName) {
+
+        String id = this.getNextPsycTypeId();
+        NodeRef library = this.getLibrary(category);
+
+        Map<QName, Serializable> props = new HashMap<>();
+        props.put(QName.createQName(RMPSY_MODEL_URI, "id_" + category), id);
+        props.put(QName.createQName(RMPSY_MODEL_URI, "name_" + category), itemName);
+
+        nodeService.createNode(library, ContentModel.ASSOC_CONTAINS,
+                QName.createQName(NamespaceService.CONTENT_MODEL_1_0_URI, itemName),
+                QName.createQName(RMPSY_MODEL_URI, category), props).getChildRef();
+
+        return id; // return the id
+    }
+
     public void newKonklusionTag(String newValue) {
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_KONKLUSION_TAGS);
-        List<ChildAssociationRef> children = nodeService.getChildAssocs(library);
 
         String name = newValue;
 
         // sæt nyt id til antal children
-        String id = String.valueOf(children.size());
+        String id = this.getNextPsycTypeId();
 
         Map<QName, Serializable> props = new HashMap<>();
         props.put(DatabaseModel.PROP_ANVENDTUNDERSOEGELSESINST_ID, id);
@@ -119,31 +135,34 @@ public class PsycBean {
 
         ArrayList<String> values = new ArrayList<>();
         values.add("PSE-10");
-        values.add("PANSS");
         values.add("EASE");
-        values.add("MAS");
+        values.add("PANSS");
+        values.add("ASI");
+        values.add("HCL:32");
         values.add("BDI-II");
-        values.add("HAM-D");
-        values.add("BAI");
-        values.add("HAM-A");
+        values.add("SCID-V");
+        values.add("ADIS-V");
         values.add("Y-BOCS");
+        values.add("HTQ");
 
-        values.add("SCID-5-PD");
+        values.add("SCID-II og SCID-5-PD");
         values.add("OPD-2");
-        values.add("ZAN-BPD");
-        values.add("Hare’s PCL-R");
-        values.add("Hare's PCL:SV");
-        values.add("Hare's PCL:YV");
+        values.add("PCL-R");
+        values.add("PCL-SV");
         values.add("CAPP");
-        values.add("Hansson Sex Attitude Questionnaire");
+        values.add("ZANBPD");
+        values.add("Hansson SAQ");
+        values.add("Hostility TWQ");
+        values.add("HADS");
 
-        values.add("Hostility Towards Women Questionnaire");
-        values.add("ABAS-3");
-        values.add("Vineland-3");
-        values.add("ADOS-2");
+        values.add("ABAS 3");
+        values.add("VINELAND 3");
+        values.add("ADOS 1 og 2");
         values.add("ADI-R");
-        values.add("BRIEF");
-        values.add("DIVA 2");
+        values.add("DIVA 1,2 og 5");
+        values.add("AAI");
+        values.add("SASB");
+        values.add("PCL:YV");
 
         NodeRef library = this.getLibrary(PROP_PSYC_LIBRARY_INTERVIEWRATING);
 
