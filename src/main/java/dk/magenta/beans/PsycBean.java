@@ -183,50 +183,62 @@ public class PsycBean {
     public void createDataForKognitivRating() {
 
         ArrayList<String> values = new ArrayList<>();
+        values.add("WAIS-III testbatteri");
+        values.add("WAIS-III delprøver");
         values.add("WAIS-IV testbatteri");
-        values.add("MoCA");
-        values.add("MMSE");
-        values.add("RIAS");
-        values.add("WAIS-IV delprøver i udvalg");
+        values.add("WAIS-IV delprøver");
 
+        values.add("RAVENS 2 screening");
+        values.add("Leither 3 screening");
+        values.add("RAIS screening");
+        values.add("SON-R 6.40 screening");
 
-        values.add("D2-test");
-        values.add("Trail-Making test");
-        values.add("RBANS delprøver i udvalg");
-        values.add("RBANS testbatteri");
-        values.add("ACE-III");
+        values.add("MMSE testbatteri");
+        values.add("ACE-III testbatteri");
+        values.add("MoCA testbatteri");
+        values.add("RUDAS testbatteri");
 
-        values.add("SDMT");
-        values.add("Rey's Auditory Verbal Learning Task");
-        values.add("Street");
-        values.add("Rey's Complex Figure Test");
-        values.add("Sætningsspændvidde");
-
-        values.add("Ordsprogsprøve");
-        values.add("WMS-III testbatteri");
-        values.add("WMS-III delprøver i udvalg");
-        values.add("Kendte Ansigter");
+        values.add("CTNB testbatteri");
+        values.add("CTNB delprøver");
         values.add("WAB testbatteri");
+        values.add("WAB delprøver");
 
-        values.add("WAB delprøver i udvalg");
+        values.add("RBANS testbatteri");
+        values.add("RBANS delprøver");
+        values.add("WMS-III testbatteri");
+        values.add("WMS-III delprøver");
+
         values.add("D-KEFS testbatteri");
-        values.add("D-KEFS delprøver i udvalg");
+        values.add("D-KEFS delprøver");
         values.add("BADS testbatteri");
-        values.add("BADS delprøver i udvalg");
+        values.add("BADS delprøver");
 
-        values.add("Stroop test");
-        values.add("Wisconsin Card Sorting Test");
-        values.add("IOWA Gambling Task v2");
-        values.add("Tower of London");
-        values.add("Ordmobilisering");
+//        her skifter det
 
         values.add("RME-R");
-        values.add("WAIS-III Billedordning");
-        values.add("Brüne’s billedordning");
-        values.add("Animated triangles");
+        values.add("Brüne's Billedordning");
+        values.add("Animerede trekanter");
         values.add("TASIT");
 
+        values.add("Ordmobilisering");
         values.add("Kognitive Estimater");
+        values.add("Street test");
+        values.add("Kendte Ansigter");
+
+        values.add("STROOP test");
+        values.add("Tower of London");
+        values.add("IOWA Gambling Tast v2");
+        values.add("Wisconsin Card Sorting Test");
+
+        values.add("RAVLT");
+        values.add("RCFT");
+        values.add("Ordsprogsprøve");
+        values.add("Sætningsspændvidde");
+
+        values.add("SDMT");
+        values.add("D2/D2-R test");
+        values.add("Kategoristyret billedordning");
+        values.add("Trail-Making test");
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_KOGNITIV);
 
@@ -247,11 +259,12 @@ public class PsycBean {
     public void createDataForImplicit() {
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("Rorschach-test");
+        values.add("Rorschach test (CS og CS-R");
         values.add("Ord-associationstest");
         values.add("Objektsorteringstest");
         values.add("TAT");
         values.add("Rotter’s Sætningsfuldendelsestest");
+        values.add("AAAPS");
 
         NodeRef library = this.getLibrary(PROP_PSYC_LIBRARY_IMPLECITE);
 
@@ -273,24 +286,34 @@ public class PsycBean {
 
         ArrayList<String> values = new ArrayList<>();
         values.add("MMPI-2");
-        values.add("MMPI-2-RF");
-        values.add("SPQ");
-        values.add("DES-II");
-        values.add("PAI");
-
-        values.add("PID-5");
-        values.add("PiCD");
         values.add("MCMI-III");
+        values.add("MMPI-A");
+
+        values.add("MMPI-2 RF");
         values.add("MCMI-IV");
+        values.add("MMPI-A RF");
+
+        values.add("SPQ");
+        values.add("SIPP-118");
         values.add("MACI");
 
-        values.add("DAPP-BQ");
-        values.add("SIPP-118");
+        values.add("PAI");
+        values.add("DIP-Q");
         values.add("ICU");
+
+        values.add("DES-II");
+        values.add("PID-5");
+        values.add("BRIEF og BRIEF-2");
+
+        values.add("PiCD");
         values.add("RAADS-R");
+
+        values.add("DAPP-BQ");
+        values.add("SRS-2");
+
         values.add("DSQ-40");
 
-        values.add("Neo-PI-3");
+        values.add("Neo-PI-R og Neo-PI-3");
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_EXPLICIT);
 
@@ -311,13 +334,24 @@ public class PsycBean {
     public void createDataForMalingering() {
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("SIRS-2");
-        values.add("M-FAST");
-        values.add("SIMS");
+        values.add("SIRS og SIRS-2");
+
         values.add("RFI");
+        values.add("SIMS");
+        values.add("MMPI-2 / MMPI-2");
+
         values.add("TOMM");
+        values.add("M-FAST");
+        values.add("PAI");
 
         values.add("RMT-W og RMT-F");
+        values.add("MENT");
+        values.add("MCMI-III / MCMI-IV");
+
+        values.add("VSVT");
+        values.add("ADI");
+        values.add("WMS-III delprøve (ansigtsgenkendelse");
+
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_MALERING);
 
         for (int i=0; i<=values.size()-1;i++ ) {
