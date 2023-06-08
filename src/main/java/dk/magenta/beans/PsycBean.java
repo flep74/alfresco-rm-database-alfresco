@@ -371,37 +371,49 @@ public class PsycBean {
     public void createDataForRisiko() {
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("SAPROF");
-        values.add("FAM");
+        values.add("HCR-20-v2");
         values.add("HCR-20 v3");
-        values.add("VRAG-R");
-        values.add("VRAG");
+        values.add("SAPROV v2");
+        values.add("FAM");
 
-        values.add("START");
-        values.add("NAS-PI");
-        values.add("ARMADILO-G");
-        values.add("EARL 20B/21G");
-        values.add("SAVRY");
-
-        values.add("SAPROF-YV");
-        values.add("STATIC-99-R");
+        values.add("SVR-20 v1");
         values.add("SVR-20 v2");
-        values.add("RSVP");
+        values.add("RSVP v1");
         values.add("RSVP v2");
 
-        values.add("SRP");
-        values.add("SAM");
         values.add("SARA v3");
-        values.add("ERASOR");
-        values.add("ARMADILO-S");
+        values.add("PATRIARCH v2");
+        values.add("SAM");
+        values.add("SRP");
 
-        values.add("SNRF");
-        values.add("F-FTAF");
+        values.add("ARMADILO-G");
+        values.add("ARMADILO-S");
+        values.add("M-TTAF");
+        values.add("NFRA");
+
         values.add("MLG");
         values.add("ERG-22+");
-        values.add("VERA");
-
+        values.add("VERA-2R");
         values.add("TRAP-18");
+
+        values.add("EARL 20B/21G");
+        values.add("SAVRY");
+        values.add("SAPROV:YV");
+
+        values.add("J-SOAP II");
+        values.add("ERASOR v2");
+        values.add("MEGA");
+
+        values.add("VRAG");
+        values.add("VRAG-R");
+        values.add("STATIC-99-R");
+        values.add("STATIC-2000");
+
+        values.add("BVC");
+        values.add("START");
+        values.add("V-RISK 10");
+        values.add("VRT");
+
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_RISIKO);
 
@@ -424,11 +436,15 @@ public class PsycBean {
     public void createDataForPsykMalering() {
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("Begrundet mistanke om dissimulation af psykisk lidelse");
-        values.add("Vanskeligheder med optimalt samarbejde: Selvforskønnelse");
-        values.add("Upåfaldende fremtræden / Ej taget stilling");
-        values.add("Vanskeligheder med optimalt samarbejde: Selvforringelse");
-        values.add("Begrundet mistanke om simulation af psykisk lidelse");
+        values.add("Påvist simulation af psykisk lidelse");
+        values.add("Påvist dissimulation af psykisk lidelse");
+
+        values.add("Vurderingsvanskeligheder: Selvforringende selvfremstilling");
+        values.add("Vurderingsvanskeligheder: Selvforskønnende selvfremstilling");
+
+        values.add("Neutral fremtræden: Upåfaldende selvfremstilling");
+
+        values.add("Ingen stillingtagen");
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_PSYCH_MALERING);
 
@@ -449,9 +465,46 @@ public class PsycBean {
     public void createDataForKonklusionTags() {
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("tag1");
-        values.add("tag2");
-        values.add("tag3");
+        values.add("Neurodevelopment disorders");
+        values.add("Disorders of bodily distress or bodily experience");
+        values.add("Pseudo-psykopatisk skizofreni");
+
+        values.add("Schizophrenia and other primary psychotic disorders");
+        values.add("Disorders due to substance use or addictive behaviors");
+        values.add("Påvist kromosomafvigelse");
+
+        values.add("Catatonia");
+        values.add("Impulse control disorders");
+        values.add("R41.8 Inferiotas intellektualis (70-85)");
+
+        values.add("Mood disorders");
+        values.add("Distruptive behavior or dissocial disorders");
+        values.add("Auditory Processing Disorder (APD)");
+
+        values.add("Anxiety and fear-related disorders");
+        values.add("Personality disorders and related traits");
+        values.add("Non-verbal Learning Disorder (NLD)");
+
+        values.add("Obsessive-compulsive and related disorders");
+        values.add("Paraphilic disorders");
+        values.add("PCL-psykopati (>=27 eller >= 18)");
+
+        values.add("Disorders specifically associated with stress");
+        values.add("Factitious disorders");
+        values.add("Patalogisk narcissisme");
+
+        values.add("Dissociative disorders");
+        values.add("Neurocognitive disorders");
+        values.add("Z65.1 Fængsling eller indespærring");
+
+        values.add("Feeding or eating disorders");
+        values.add("Mental or behavioral associated with pregnancy, childbirth or puerperium");
+        values.add("Z76.4 Simulation");
+
+        values.add("Elimination disorders");
+        values.add("Secondary mental or behavioral syndroms associated with disorders or diseases classified elswhere");
+        values.add("Uafklaret psykopatologi");
+
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_KONKLUSION_TAGS);
 
@@ -476,8 +529,8 @@ public class PsycBean {
         this.createDataForKognitivRating(); // ok
         this.createDataForImplicit(); // ok
         this.createDataForEksplicit(); // ok
-        this.createDataForRisiko(); // ok
         this.createDataForMalingering(); // ok
+        this.createDataForRisiko(); // ok
         this.createDataForPsykMalering(); // ok
         this.createDataForKonklusionTags();
     }
