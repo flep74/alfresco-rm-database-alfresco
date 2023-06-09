@@ -491,7 +491,7 @@ public class PsycBean {
 
         values.add("Disorders specifically associated with stress");
         values.add("Factitious disorders");
-        values.add("Patalogisk narcissisme");
+        values.add("Patologisk narcissisme");
 
         values.add("Dissociative disorders");
         values.add("Neurocognitive disorders");
