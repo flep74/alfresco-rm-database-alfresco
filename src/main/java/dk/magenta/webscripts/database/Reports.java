@@ -2,8 +2,12 @@ package dk.magenta.webscripts.database;
 
 import dk.magenta.beans.ReportWaitingTimeBean;
 import dk.magenta.beans.WeeklyStatBean;
+import dk.magenta.model.DatabaseModel;
 import dk.magenta.utils.JSONUtils;
 import org.alfresco.service.cmr.repository.NodeRef;
+import org.alfresco.service.cmr.repository.NodeService;
+import org.alfresco.service.cmr.security.AuthenticationService;
+import org.alfresco.service.cmr.security.PersonService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.extensions.surf.util.Content;
@@ -25,6 +29,23 @@ public class Reports extends AbstractWebScript {
 
     private ReportWaitingTimeBean reportWaitingTimeBean;
 
+    public void setNodeService(NodeService nodeService) {
+        this.nodeService = nodeService;
+    }
+
+    public void setPersonService(PersonService personService) {
+        this.personService = personService;
+    }
+
+    private NodeService nodeService;
+    private PersonService personService;
+
+    public void setAuthenticationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
+    private AuthenticationService authenticationService;
+
     @Override
     public void execute(WebScriptRequest req, WebScriptResponse res) throws IOException {
 
@@ -38,6 +59,17 @@ public class Reports extends AbstractWebScript {
             result = new JSONObject();
             JSONObject json = new JSONObject(c.getContent());
             String method = JSONUtils.getString(json, "method");
+
+            String userNameForbuaCheck = "";
+            userNameForbuaCheck = authenticationService.getCurrentUserName();
+
+            boolean bua = false;
+
+            if (nodeService.hasAspect(personService.getPerson(userNameForbuaCheck), DatabaseModel.ASPECT_BUA_USER)) {
+                bua=true;
+            }
+
+
 
             switch (method) {
                 case "waitingtime":
@@ -53,7 +85,7 @@ public class Reports extends AbstractWebScript {
                     System.out.println("hvad er statusCriteria");
                     System.out.println(statusCriteria);
 
-                    NodeRef report = reportWaitingTimeBean.getReport(fromDate, toDate, statusCriteria);
+                    NodeRef report = reportWaitingTimeBean.getReport(fromDate, toDate, statusCriteria, bua);
 
                     result.put("spreadsheet", report);
                     break;
