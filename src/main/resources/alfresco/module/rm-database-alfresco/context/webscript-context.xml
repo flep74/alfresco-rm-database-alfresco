@@ -289,6 +289,7 @@
 
 	<bean id="webscript.contents.mergesuppleredeudttemplate.post" class="dk.magenta.webscripts.contents.MergeSuppleredendeUdtTemplate" parent="webscript">
 		<property name="documentTemplateBean" ref="documentTemplateBean"/>
+		<property name="NodeService" ref="nodeService"/>
 	</bean>
 
 	<bean id="webscript.contents.getdownloadstatus.get" class="dk.magenta.webscripts.contents.GetDownloadStatus" parent="webscript">
