@@ -109,7 +109,9 @@ public class PsycBean {
         values.add("Neuro-udviklingsforstyrrelser");
 
         values.add("Malingering (simulation og dissimulation");
-        values.add("Risko for recidiv til ligeartet eller lignende kriminalitet (farlighed)");
+        values.add("Farlighed (risiko for recidiv til ligeartet eller lignende kriminalitet)");
+
+
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_PSYCH_TYPE);
 
@@ -148,9 +150,9 @@ public class PsycBean {
         values.add("SCID-II og SCID-5-PD");
         values.add("OPD-2");
         values.add("PCL-R");
-        values.add("PCL-SV");
+        values.add("PCL:SV");
         values.add("CAPP");
-        values.add("ZANBPD");
+        values.add("ZAN-BPD");
         values.add("Hansson SAQ");
         values.add("Hostility TWQ");
         values.add("HADS");
@@ -159,7 +161,7 @@ public class PsycBean {
         values.add("VINELAND 3");
         values.add("ADOS 1 og 2");
         values.add("ADI-R");
-        values.add("DIVA 1,2 og 5");
+        values.add("DIVA 1, 2 og 5");
         values.add("AAI");
         values.add("SASB");
         values.add("PCL:YV");
@@ -227,7 +229,7 @@ public class PsycBean {
 
         values.add("STROOP test");
         values.add("Tower of London");
-        values.add("IOWA Gambling Tast v2");
+        values.add("IOWA Gambling Task v2");
         values.add("Wisconsin Card Sorting Test");
 
         values.add("RAVLT");
@@ -259,7 +261,7 @@ public class PsycBean {
     public void createDataForImplicit() {
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("Rorschach test (CS og CS-R");
+        values.add("Rorschach test (CS og CS-R)");
         values.add("Ord-associationstest");
         values.add("Objektsorteringstest");
         values.add("TAT");
@@ -334,23 +336,25 @@ public class PsycBean {
     public void createDataForMalingering() {
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("SIRS og SIRS-2");
-
-        values.add("RFI");
-        values.add("SIMS");
-        values.add("MMPI-2 / MMPI-2");
+        values.add("M-FAST");
+        values.add("SIRS-2");
 
         values.add("TOMM");
-        values.add("M-FAST");
-        values.add("PAI");
+        values.add("SIMS");
+        values.add("MMPI-2 / MMPI-2 RF");
 
         values.add("RMT-W og RMT-F");
         values.add("MENT");
-        values.add("MCMI-III / MCMI-IV");
+        values.add("PAI");
 
         values.add("VSVT");
         values.add("ADI");
-        values.add("WMS-III delprøve (ansigtsgenkendelse");
+        values.add("MCMI-III / MCMI-IV");
+
+        values.add("RFI");
+
+
+
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_MALERING);
 
@@ -436,15 +440,14 @@ public class PsycBean {
     public void createDataForPsykMalering() {
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("Påvist simulation af psykisk lidelse");
-        values.add("Påvist dissimulation af psykisk lidelse");
-
-        values.add("Vurderingsvanskeligheder: Selvforringende selvfremstilling");
-        values.add("Vurderingsvanskeligheder: Selvforskønnende selvfremstilling");
-
+        values.add("Ingen eller uafklaret stillingtagen");
         values.add("Neutral fremtræden: Upåfaldende selvfremstilling");
 
-        values.add("Ingen stillingtagen");
+        values.add("Forvrænget selvfremstilling: Selvforskønnende idyllisering ");
+        values.add("Forvrænget selvfremstilling: Selvforringende dramatisering");
+
+        values.add("Påvist dissimulation: Skjult psykisk lidelse");
+        values.add("Påvist simulation: Fingeret psykisk lidelse");
 
         NodeRef library = this.getLibrary(DatabaseModel.PROP_PSYC_LIBRARY_PSYCH_MALERING);
 
