@@ -443,6 +443,48 @@ public class DocumentTemplateBean {
         return newFile.getNodeRef().getId();
     }
 
+    public NodeRef generatePSYKUS(NodeRef declaration) throws Exception {
+
+        DeclarationInfo info = this.getProperties(declaration);
+
+        NodeRef nodeRef_templateFolder = siteService.getContainer(DatabaseModel.TYPE_PSYC_SITENAME, DatabaseModel.PROP_TEMPLATE_LIBRARY);
+
+        List<String> list = Arrays.asList(DatabaseModel.PROP_PSYKOPS_TEMPLATE);
+        List<ChildAssociationRef> children = nodeService.getChildrenByName(nodeRef_templateFolder, ContentModel.ASSOC_CONTAINS, list);
+
+        NodeRef templateDoc = children.get(0).getChildRef();
+
+        ContentReader contentReader = contentService.getReader(templateDoc, ContentModel.PROP_CONTENT);
+        TextDocument templateDocument = TextDocument.loadDocument(contentReader.getContentInputStream());
+
+
+        // merging
+        VariableField candidateVar = templateDocument.getVariableFieldByName("CPR");
+        candidateVar.updateField(info.cpr, null);
+
+        VariableField navn = templateDocument.getVariableFieldByName("NAVN");
+        navn.updateField(info.fornavn + " " + info.efternavn, null);
+
+
+
+        // make the new document below the case
+
+        // #RITM0818252 - template should be saved in the new folder, Erklaering og Psykologisk rapport
+        NodeRef folder = fileFolderService.searchSimple(declaration, DatabaseModel.ATTR_DEFAULT_DECLARATION_FOLDER);
+
+        FileInfo newFile = fileFolderService.create(folder, info.cpr.substring(0,6) + "_psykundersøgelse.odt", ContentModel.TYPE_CONTENT);
+
+        ContentWriter writer = contentService.getWriter(newFile.getNodeRef(), ContentModel.PROP_CONTENT, true);
+        writer.setMimetype("application/vnd.oasis.opendocument.text");
+
+        File f = new File("tmp");
+
+        templateDocument.save(f);
+        writer.putContent(f);
+
+        return newFile.getNodeRef();
+    }
+
     public NodeRef generatePsycologicalDocumen(NodeRef templateDoc, NodeRef declaration) throws Exception {
 
         DeclarationInfo info = this.getProperties(declaration);

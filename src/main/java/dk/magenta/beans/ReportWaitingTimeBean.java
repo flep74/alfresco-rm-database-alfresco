@@ -129,7 +129,7 @@ public class ReportWaitingTimeBean {
             String to_formattedDate = outputFormatter.format(now);
             String from_formattedDate = outputFormatter.format(nowMinus14);
 
-            NodeRef report = this.getReport(from_formattedDate, to_formattedDate, "");
+            NodeRef report = this.getReport(from_formattedDate, to_formattedDate, "", false);
 
             NodeRef[] attachmentList = new NodeRef[1];
             attachmentList[0] = report;
@@ -140,9 +140,9 @@ public class ReportWaitingTimeBean {
     }
 
 
-    public NodeRef getReport(String from, String to, String statusCriteria) throws Exception {
+    public NodeRef getReport(String from, String to, String statusCriteria, boolean bua) throws Exception {
 
-        List<NodeRef> nodeRefs = this.query("declarationDate", from, to, false, statusCriteria);
+        List<NodeRef> nodeRefs = this.query("declarationDate", from, to, bua, statusCriteria);
         NodeRef spreadSheet = setupSpreadSheet(nodeRefs);
 
 

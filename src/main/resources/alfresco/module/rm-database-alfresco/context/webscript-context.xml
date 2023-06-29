@@ -29,6 +29,9 @@
 
 	<bean id="webscript.database.reports.post" class="dk.magenta.webscripts.database.Reports" parent="webscript">
 		<property name="ReportWaitingTimeBean" ref="reportWaitingTimeBean"/>
+		<property name="authenticationService" ref="authenticationService"/>
+		<property name="nodeService" ref="NodeService"/>
+		<property name="personService" ref="PersonService"/>
 	</bean>
 
 	<bean id="webscript.database.entry_import.post" class="dk.magenta.webscripts.database.AddEntry_import" parent="webscript">
@@ -102,7 +105,6 @@
 	<bean id="webscript.entries.entry.delete" class="dk.magenta.webscripts.entry.DeleteEntry" parent="webscript">
 		<property name="entryBean" ref="entryBean"/>
 	</bean>
-
 
 	<bean id="webscript.entries.deleteobservand.post" class="dk.magenta.webscripts.entry.DeleteObservand" parent="webscript">
 		<property name="entryBean" ref="entryBean"/>
