@@ -474,11 +474,11 @@ public class PsycBean {
 
         values.add("Schizophrenia and other primary psychotic disorders");
         values.add("Disorders due to substance use or addictive behaviors");
-        values.add("Påvist kromosomafvigelse");
+        values.add("R41.8 Inferioritas intellektualis (70-85)");
 
         values.add("Catatonia");
         values.add("Impulse control disorders");
-        values.add("R41.8 Inferiotas intellektualis (70-85)");
+        values.add("Påvist kromosomafvigelse");
 
         values.add("Mood disorders");
         values.add("Distruptive behavior or dissocial disorders");
@@ -494,14 +494,14 @@ public class PsycBean {
 
         values.add("Disorders specifically associated with stress");
         values.add("Factitious disorders");
-        values.add("Patologisk narcissisme");
+        values.add("Patologisk (malign) narcissisme");
 
         values.add("Dissociative disorders");
         values.add("Neurocognitive disorders");
         values.add("Z65.1 Fængsling eller indespærring");
 
         values.add("Feeding or eating disorders");
-        values.add("Mental or behavioral associated with pregnancy, childbirth or puerperium");
+        values.add("Mental or behavioral disorders associated with pregnancy, childbirth or the puerperium");
         values.add("Z76.4 Simulation");
 
         values.add("Elimination disorders");
