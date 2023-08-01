@@ -532,11 +532,14 @@ public class GetPaginetedEntries extends AbstractWebScript {
             }
 
             if ( input.has("finalVerdict") || input.has("selectedVerdict")) {
-                System.out.println("hvad er finalVerdict");
+
                 JSONObject o = new JSONObject();
                 o.put("key", "finalVerdict");
 
                 if (input.has("selectedVerdict")) {
+                    System.out.println("hvad er selectedVerdict");
+                    System.out.println(input.get("selectedVerdict"));
+
                     o.put("value", input.get("selectedVerdict"));
                     o.put("include", true);
                 }
@@ -788,6 +791,17 @@ public class GetPaginetedEntries extends AbstractWebScript {
         }
 
         JSONUtils.write(webScriptWriter, result);
+    }
+
+    private String escapeMetaCharacters(String inputString){
+        final String[] metaCharacters = {"\\","^","$","{","}","[","]","(",")",".","*","+","?","|","<",">","-","&","%"};
+
+        for (int i = 0 ; i < metaCharacters.length ; i++){
+            if(inputString.contains(metaCharacters[i])){
+                inputString = inputString.replace(metaCharacters[i],"\\"+metaCharacters[i]);
+            }
+        }
+        return inputString;
     }
 
     public String createInstrumentQuery(String instrument, JSONObject values) throws JSONException {
