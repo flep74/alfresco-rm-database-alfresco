@@ -163,10 +163,6 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 searchQueriesForPdf.put("returnOfDeclarationDate", QueryUtils.dateRangeQuery("MIN",t_formattedDate));
             }
 
-
-
-
-
             // date range for declarationsdate
 
 
@@ -354,8 +350,6 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     }
                 }
 
-
-
                 JSONObject o = new JSONObject();
                 o.put("key", "status");
                 o.put("value", "(" + queryStringMainCharge + ")");
@@ -542,10 +536,15 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     o.put("value", input.get("selectedVerdict"));
                     o.put("include", true);
+
+                    searchQueriesForPdf.put("finalVerdict", input.get("selectedVerdict").toString());
+
                 }
                 else {
                     o.put("value", "NULL");
                     o.put("include", false);
+
+                    searchQueriesForPdf.put("finalVerdict", "alle");
                 }
 
                 queryArray.put(o);
