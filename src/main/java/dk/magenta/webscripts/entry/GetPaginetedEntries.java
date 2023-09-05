@@ -778,14 +778,11 @@ public class GetPaginetedEntries extends AbstractWebScript {
             JSONObject jsonObject = values.getJSONObject(i);
 
             if (jsonObject.getBoolean("val")) {
-                System.out.println("jeg har fundet én");
-                System.out.println(jsonObject.toString());
-
                 if (returnQuery.equals("")) {
-                    returnQuery = stdQuery + jsonObject.getBoolean("id");
+                    returnQuery = stdQuery + jsonObject.getString("id");
                 }
                 else {
-                    returnQuery = returnQuery + " OR " + stdQuery + jsonObject.getBoolean("id");
+                    returnQuery = returnQuery + " OR " + stdQuery + jsonObject.getString("id");
                 }
             }
 
