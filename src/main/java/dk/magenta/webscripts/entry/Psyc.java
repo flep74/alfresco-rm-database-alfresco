@@ -7,6 +7,8 @@ import dk.magenta.model.DatabaseModel;
 import dk.magenta.utils.JSONUtils;
 import org.alfresco.jlan.util.StringList;
 import org.alfresco.model.ContentModel;
+import org.alfresco.service.cmr.lock.LockService;
+import org.alfresco.service.cmr.lock.LockType;
 import org.alfresco.service.cmr.model.FileFolderService;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
@@ -49,6 +51,12 @@ public class Psyc extends AbstractWebScript {
 
     private NodeService nodeService;
     private PsycValuesBean psycValuesBean;
+
+    public void setLockService(LockService lockService) {
+        this.lockService = lockService;
+    }
+
+    private LockService lockService;
 
     public void setEntryBean(EntryBean entryBean) {
         this.entryBean = entryBean;
@@ -145,17 +153,26 @@ public class Psyc extends AbstractWebScript {
                     NodeRef observand = entryBean.getEntry(query);
 
 
+                    // check if locked - then remove temporarily
+                    boolean temporaryUnlocked = false;
+                    if (lockService.isLocked(observand)) {
+                        lockService.unlock(observand);
+                        temporaryUnlocked = true;
+                    }
+
                     if (!nodeService.hasAspect(observand, ASPECT_PSYCDATA)) {
                         nodeService.addAspect(observand, ASPECT_PSYCDATA, null);
                     }
-
-
                     QName instrumentQname = QName.createQName(RMPSY_MODEL_URI, instrument);
 
                     if (selected.equals("")) {
                         nodeService.removeProperty(observand,instrumentQname);
                     } else {
                         nodeService.setProperty(observand,instrumentQname,selected);
+                    }
+
+                    if (temporaryUnlocked) {
+                        lockService.lock(observand, LockType.READ_ONLY_LOCK);
                     }
 
 
@@ -433,7 +450,16 @@ public class Psyc extends AbstractWebScript {
 
                     newValue = jsonProperties.getString("newValue");
 
+                    temporaryUnlocked = false;
+                    if (lockService.isLocked(observand)) {
+                        lockService.unlock(observand);
+                        temporaryUnlocked = true;
+                    }
                     psycBean.updateKonklusionText(observand, newValue);
+                    if (temporaryUnlocked) {
+                        lockService.lock(observand, LockType.READ_ONLY_LOCK);
+                    }
+
                     break;
                 case "getKonklusionText":
                     System.out.println("saveKonklusionText");
