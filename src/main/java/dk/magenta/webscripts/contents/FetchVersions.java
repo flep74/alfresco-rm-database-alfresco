@@ -40,12 +40,7 @@ public class FetchVersions extends AbstractWebScript {
     @Override
     public void execute(WebScriptRequest webScriptRequest, WebScriptResponse webScriptResponse) throws IOException {
 
-
-
         Map<String, String> params = JSONUtils.parseParameters(webScriptRequest.getURL());
-
-
-
 
         webScriptResponse.setContentEncoding("UTF-8");
         Writer webScriptWriter = webScriptResponse.getWriter();
@@ -54,9 +49,7 @@ public class FetchVersions extends AbstractWebScript {
         try {
             String nodeId = params.get("node");
             NodeRef nodeRef = new NodeRef("workspace://SpacesStore/" + nodeId);
-
             result = contentsBean.getVersions(nodeRef);
-
         } catch (Exception e) {
             e.printStackTrace();
             result.put(JSONUtils.getError(e));
