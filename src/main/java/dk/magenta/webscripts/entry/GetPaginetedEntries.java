@@ -669,12 +669,10 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                 while (i.hasNext()) {
                     String instrument = (String) i.next();
-                    JSONObject values = instruments.getJSONObject(instrument);
+                    JSONArray values = instruments.getJSONArray(instrument);
 
                     System.out.println("hvad er values");
                     System.out.println(values);
-
-
 
                     String instrumentQuerypart = createInstrumentQuery(instrument, values);
 
@@ -785,42 +783,50 @@ public class GetPaginetedEntries extends AbstractWebScript {
         JSONUtils.write(webScriptWriter, result);
     }
 
-    public String createInstrumentQuery(String instrument, JSONObject values) throws JSONException {
+    public String createInstrumentQuery(String instrument, JSONArray values) throws JSONException {
 
         String stdQuery = "@" + RMPSY_MODEL_PREFIX + "\\:" + instrument + ":";
         String returnQuery = "";
 
         ArrayList selected = new ArrayList();
 
-        Iterator keys = values.keys();
+//        Iterator keys = values.keys();
 
-        while (keys.hasNext()) {
-            String key = (String)keys.next();
-            if (values.getBoolean(key)) {
+        for (int i=0; i<= values.length()-1; i++) {
 
+            JSONObject jsonObject = values.getJSONObject(i);
+
+            if (jsonObject.getBoolean("val")) {
                 if (returnQuery.equals("")) {
-                    returnQuery = stdQuery + key;
+                    returnQuery = stdQuery + jsonObject.getString("id");
                 }
                 else {
-                    returnQuery = returnQuery + " OR " + stdQuery + key;
+                    returnQuery = returnQuery + " OR " + stdQuery + jsonObject.getString("id");
                 }
-                selected.add(key);
             }
+
         }
+
+
+//        while (keys.hasNext()) {
+//            String key = (String)keys.next();
+//            if (values.getBoolean(key)) {
+//
+//                if (returnQuery.equals("")) {
+//                    returnQuery = stdQuery + key;
+//                }
+//                else {
+//                    returnQuery = returnQuery + " OR " + stdQuery + key;
+//                }
+//            selected.add(key);
+//            }
+//        }
 
         System.out.println("selected for:" + instrument);
         System.out.println(String.join(",", selected));
 
         System.out.println("hvad er returnQuery");
         System.out.println(returnQuery);
-
-
-
-//        switch (instrument) {
-//
-//            case PROP_PSYC_LIBRARY_PSYCH_TYPE:
-//                break;
-//        }
 
         return returnQuery;
     }
