@@ -388,6 +388,10 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String doctor = (String) jsonArray.get(i);
+
+                    // hack to support the removeal of tokenized indexing of doctor names
+                    doctor = doctor + "*";
+
 //                    doctor = doctor.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
@@ -422,6 +426,9 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String supervisingDoctor = (String) jsonArray.get(i);
+
+                    // hack to support the removeal of tokenized indexing of doctor names
+                    supervisingDoctor = supervisingDoctor + "*";
 //                    doctor = doctor.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
@@ -499,6 +506,12 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                     // hack to support the import of the names without titles in the old system
                     String psychologist = (String) jsonArray.get(i);
+
+                    // hack to support the removeal of tokenized indexing of doctor names
+                    psychologist  = psychologist + "*";
+
+
+
 //                    psychologist = psychologist.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
@@ -589,10 +602,16 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 JSONArray jsonArray = input.getJSONArray("socialworker");
                 String queryStringSocialworker = "";
 
+
+
                 for (int i=0; i <= jsonArray.length()-1;i++) {
 
                     // hack to support the import of the names without titles in the old system
                     String socialworker = (String) jsonArray.get(i);
+
+                    // hack to support the removeal of tokenized indexing of doctor names
+                    socialworker  = socialworker + "*";
+
                     // socialworker = socialworker.split("-")[0]; hotfix for handeling lastnames with "-" beeing broken
 
                     if (i == 0) {
