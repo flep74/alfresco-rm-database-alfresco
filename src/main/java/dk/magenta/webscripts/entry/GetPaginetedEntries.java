@@ -163,10 +163,6 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 searchQueriesForPdf.put("returnOfDeclarationDate", QueryUtils.dateRangeQuery("MIN",t_formattedDate));
             }
 
-
-
-
-
             // date range for declarationsdate
 
 
@@ -354,8 +350,6 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     }
                 }
 
-
-
                 JSONObject o = new JSONObject();
                 o.put("key", "status");
                 o.put("value", "(" + queryStringMainCharge + ")");
@@ -541,6 +535,38 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 if (input.getBoolean("socialEval"))
                     o.put("value", "NULL");
                 o.put("include", false);
+                queryArray.put(o);
+            }
+
+            if ( input.has("finalVerdict") || input.has("selectedVerdict")) {
+
+                JSONObject o = new JSONObject();
+                o.put("key", "finalVerdict");
+
+                if (input.has("selectedVerdict")) {
+                    System.out.println("hvad er selectedVerdict");
+                    System.out.println(input.get("selectedVerdict"));
+
+                    o.put("value", input.get("selectedVerdict"));
+                    o.put("include", true);
+
+                    searchQueriesForPdf.put("finalVerdict", input.get("selectedVerdict").toString());
+
+                }
+                else {
+                    o.put("value", "NULL");
+                    o.put("include", false);
+
+                    searchQueriesForPdf.put("finalVerdict", "alle");
+                }
+
+                queryArray.put(o);
+            }
+            else {
+                JSONObject o = new JSONObject();
+                o.put("key", "finalVerdict");
+                o.put("value", "NULL");
+                o.put("include", true);
                 queryArray.put(o);
             }
 
@@ -781,6 +807,18 @@ public class GetPaginetedEntries extends AbstractWebScript {
         }
 
         JSONUtils.write(webScriptWriter, result);
+    }
+
+
+    private String escapeMetaCharacters(String inputString){
+        final String[] metaCharacters = {"\\","^","$","{","}","[","]","(",")",".","*","+","?","|","<",">","-","&","%"};
+
+        for (int i = 0 ; i < metaCharacters.length ; i++){
+            if(inputString.contains(metaCharacters[i])){
+                inputString = inputString.replace(metaCharacters[i],"\\"+metaCharacters[i]);
+            }
+        }
+        return inputString;
     }
 
     public String createInstrumentQuery(String instrument, JSONArray values) throws JSONException {

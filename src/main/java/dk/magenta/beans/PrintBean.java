@@ -339,6 +339,11 @@ public class PrintBean {
             supervisingDoctor = jsonObject.getString("supervisingDoctor");
         }
 
+        String finalVerdict = "";
+        if (jsonObject.has("finalVerdict")) {
+            finalVerdict = jsonObject.getString("finalVerdict");
+        }
+
         String declarationFromDate = "";
         if (jsonObject.has("declarationFromDate")) {
             declarationFromDate = jsonObject.getString("declarationFromDate");
@@ -408,6 +413,15 @@ public class PrintBean {
             row.getCellByIndex(0).addParagraph("Hoveddiagnose: " + mainDiagnosis);
             row.getCellByIndex(0).setFont(font);
         }
+
+        if (!finalVerdict.equals("")) {
+            row = table.getRowByIndex(1);
+            row.getCellByIndex(0).addParagraph("Endelig dom: " + finalVerdict);
+            row.getCellByIndex(0).setFont(font);
+        }
+
+
+
 
         if (!placement.equals("")) {
             row = table.getRowByIndex(1);
