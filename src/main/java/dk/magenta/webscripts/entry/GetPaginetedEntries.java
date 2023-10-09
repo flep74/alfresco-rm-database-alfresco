@@ -67,6 +67,9 @@ public class GetPaginetedEntries extends AbstractWebScript {
         Writer webScriptWriter = res.getWriter();
         JSONObject result = new JSONObject();
 
+        // RITM0795287
+        boolean addExtraColumns = false;
+
         JSONObject searchQueriesForPdf = new JSONObject();
 
         try {
@@ -554,7 +557,7 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                 }
                 else {
-                    o.put("value", "NULL");
+                    o.put("value", "null");
                     o.put("include", false);
 
                     searchQueriesForPdf.put("finalVerdict", "alle");
@@ -563,11 +566,16 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 queryArray.put(o);
             }
             else {
+                System.out.println("kommer jeg her");
                 JSONObject o = new JSONObject();
                 o.put("key", "finalVerdict");
-                o.put("value", "NULL");
+                o.put("value", "null");
                 o.put("include", true);
                 queryArray.put(o);
+
+                // og sæt markør for special visning af kolonner
+                addExtraColumns = true;
+
             }
 
             if (input.has("firstName")) {
@@ -759,6 +767,17 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                 if (tmp.has("supervisingDoctor") && !tmp.get("supervisingDoctor").equals("null")) {
                     e.put("supervisingDoctor", tmp.get("supervisingDoctor"));
+                }
+
+                // todo add extra columns for the usecase where no finalverdict has been selected and the user wants extra fields in the view
+
+                if (addExtraColumns) {
+                    if (tmp.has("journalNumber")) {
+                        e.put("journalNumber", tmp.get("journalNumber"));
+                    }
+                    if (tmp.has("referingAgency")) {
+                        e.put("referingAgency", tmp.get("referingAgency"));
+                    }
                 }
 
                 if (tmp.has("closed")) {
