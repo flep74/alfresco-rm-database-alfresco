@@ -544,9 +544,10 @@ public class GetPaginetedEntries extends AbstractWebScript {
             if ( input.has("finalVerdict") || input.has("selectedVerdict")) {
 
                 JSONObject o = new JSONObject();
-                o.put("key", "finalVerdict");
+
 
                 if (input.has("selectedVerdict")) {
+                    o.put("key", "finalVerdict");
                     System.out.println("hvad er selectedVerdict");
                     System.out.println(input.get("selectedVerdict"));
 
@@ -554,19 +555,17 @@ public class GetPaginetedEntries extends AbstractWebScript {
                     o.put("include", true);
 
                     searchQueriesForPdf.put("finalVerdict", input.get("selectedVerdict").toString());
-
+                    queryArray.put(o);
                 }
                 else {
-                    o.put("value", "null");
-                    o.put("include", false);
-
+//                    o.put("value", "null");
+//                    o.put("include", false);
                     searchQueriesForPdf.put("finalVerdict", "alle");
                 }
 
-                queryArray.put(o);
+
             }
             else {
-                System.out.println("kommer jeg her");
                 JSONObject o = new JSONObject();
                 o.put("key", "finalVerdict");
                 o.put("value", "null");
