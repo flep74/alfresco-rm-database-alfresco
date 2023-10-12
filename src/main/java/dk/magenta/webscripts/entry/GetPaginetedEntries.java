@@ -545,7 +545,6 @@ public class GetPaginetedEntries extends AbstractWebScript {
 
                 JSONObject o = new JSONObject();
 
-
                 if (input.has("selectedVerdict")) {
                     o.put("key", "finalVerdict");
                     System.out.println("hvad er selectedVerdict");
