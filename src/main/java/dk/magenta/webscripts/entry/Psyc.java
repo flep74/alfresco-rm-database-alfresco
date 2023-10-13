@@ -1,5 +1,6 @@
 package dk.magenta.webscripts.entry;
 
+import dk.magenta.beans.AuditBean;
 import dk.magenta.beans.EntryBean;
 import dk.magenta.beans.PsycBean;
 import dk.magenta.beans.PsycValuesBean;
@@ -40,6 +41,12 @@ public class Psyc extends AbstractWebScript {
         this.psycBean = psycBean;
     }
     private PsycBean psycBean;
+
+    public void setAuditBean(AuditBean auditBean) {
+        this.auditBean = auditBean;
+    }
+
+    private AuditBean auditBean;
 
     public void setPsycValuesBean(PsycValuesBean psycValuesBean) {
         this.psycValuesBean = psycValuesBean;
@@ -461,6 +468,23 @@ public class Psyc extends AbstractWebScript {
                     }
 
                     break;
+
+                case "getTrail":
+                    caseid = jsonProperties.getString("caseid");
+
+                    query = "@rm\\:caseNumber:\"" + caseid + "\"";
+                    observand = entryBean.getEntry(query);
+
+                    try {
+                        auditBean.getAuditLogByCaseNodeRef(caseid);
+                    }
+                    catch (Exception e) {
+                        System.out.println("exception");
+                        e.printStackTrace();
+
+                    }
+
+                        break;
                 case "getKonklusionText":
                     System.out.println("saveKonklusionText");
 
