@@ -18,6 +18,8 @@ import org.alfresco.service.cmr.site.SiteService;
 import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.ISO9075;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.extensions.webscripts.WebScriptException;
@@ -57,22 +59,35 @@ public class AuditBean {
         auditQueryCallback = new OpenESDHAuditQueryCallBack();
     }
 
-    public JSONObject getAuditLogByCaseNodeRef(String caseID) {
-
-
-        System.out.println("auditService.isAuditEnabled()");
-        System.out.println(auditService.isAuditEnabled());
+    public JSONObject getAuditLogByCaseNodeRef(String caseID, String auditFrom) {
 
         AuditQueryParameters auditQueryParameters = new AuditQueryParameters();
 //        auditQueryParameters.setForward(true);
         auditQueryParameters.setApplicationName("RMDatabaseAccess");
 
-        System.out.println("hvad er nodeRef");
+
+        System.out.println("hvad er auditFrom");
+        System.out.println(auditFrom);
+
+
+        //convert String to LocalDate
+        org.joda.time.LocalDate fromDate = new org.joda.time.LocalDate(auditFrom);
+        System.out.println("hvad er from date");
+        System.out.println(fromDate.toDate().getTime());
+
+        System.out.println("og tilbage");
+        System.out.println(new Date(fromDate.toDate().getTime()));
+        System.out.println(new Date(fromDate.toDate().getTime()));
+        System.out.println(new Date(fromDate.toDate().getTime()));
+
+
+
 
         org.joda.time.LocalDate localDate = new org.joda.time.LocalDate();
         org.joda.time.LocalDate yesterdayDate = localDate.minusDays(1);
 
-        auditQueryParameters.setFromTime(yesterdayDate.toDate().getTime());
+
+        auditQueryParameters.setFromTime(fromDate.toDate().getTime());
 //        auditQueryParameters.setFromTime((new Date(+).getTime()));
 //        auditQueryParameters.addSearchKey(null, nodeRef.toString());
         auditQueryParameters.addSearchKey("/rm-database-access/post/NodeService/setProperty/no-error/case", caseID);

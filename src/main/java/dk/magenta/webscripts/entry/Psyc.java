@@ -470,13 +470,16 @@ public class Psyc extends AbstractWebScript {
                     break;
 
                 case "getTrail":
+                    // til post: localhost:8080/alfresco/s/database/retspsyk/psyc
+                    // {"properties" : {"method" : "getTrail", "caseid" : "600000", "auditFrom" : "2023-01-01"}}
+
                     caseid = jsonProperties.getString("caseid");
 
                     query = "@rm\\:caseNumber:\"" + caseid + "\"";
-                    observand = entryBean.getEntry(query);
+                    String auditFrom = jsonProperties.getString("auditFrom");
 
                     try {
-                        auditBean.getAuditLogByCaseNodeRef(caseid);
+                        auditBean.getAuditLogByCaseNodeRef(caseid, auditFrom);
                     }
                     catch (Exception e) {
                         System.out.println("exception");
@@ -489,8 +492,7 @@ public class Psyc extends AbstractWebScript {
                     System.out.println("saveKonklusionText");
 
                     caseid = jsonProperties.getString("caseid");
-
-                    query = "@rm\\:caseNumber:\"" + caseid + "\"";
+                                        query = "@rm\\:caseNumber:\"" + caseid + "\"";
                     observand = entryBean.getEntry(query);
 
                     String text = psycBean.getKonklusionText(observand);
