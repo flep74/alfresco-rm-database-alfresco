@@ -78,6 +78,7 @@
 		<property name="fileFolderService" ref="fileFolderService"/>
 		<property name="siteService" ref="siteService"/>
 		<property name="lockService" ref="lockService"/>
+		<property name="auditBean" ref="auditBean"/>
 	</bean>
 
 	<bean id="webscript.entries.waitinglist.get" class="dk.magenta.webscripts.entry.GetWaitingList" parent="webscript">

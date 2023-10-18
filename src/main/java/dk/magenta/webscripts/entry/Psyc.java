@@ -1,5 +1,6 @@
 package dk.magenta.webscripts.entry;
 
+import dk.magenta.beans.AuditBean;
 import dk.magenta.beans.EntryBean;
 import dk.magenta.beans.PsycBean;
 import dk.magenta.beans.PsycValuesBean;
@@ -40,6 +41,12 @@ public class Psyc extends AbstractWebScript {
         this.psycBean = psycBean;
     }
     private PsycBean psycBean;
+
+    public void setAuditBean(AuditBean auditBean) {
+        this.auditBean = auditBean;
+    }
+
+    private AuditBean auditBean;
 
     public void setPsycValuesBean(PsycValuesBean psycValuesBean) {
         this.psycValuesBean = psycValuesBean;
@@ -461,12 +468,31 @@ public class Psyc extends AbstractWebScript {
                     }
 
                     break;
-                case "getKonklusionText":
-                    System.out.println("saveKonklusionText");
+
+                case "getTrail":
+                    // til post: localhost:8080/alfresco/s/database/retspsyk/psyc
+                    // {"properties" : {"method" : "getTrail", "caseid" : "600000", "auditFrom" : "2023-01-01"}}
 
                     caseid = jsonProperties.getString("caseid");
 
                     query = "@rm\\:caseNumber:\"" + caseid + "\"";
+                    String auditFrom = jsonProperties.getString("auditFrom");
+
+                    try {
+                        auditBean.getAuditLogByCaseNodeRef(caseid, auditFrom);
+                    }
+                    catch (Exception e) {
+                        System.out.println("exception");
+                        e.printStackTrace();
+
+                    }
+
+                        break;
+                case "getKonklusionText":
+                    System.out.println("saveKonklusionText");
+
+                    caseid = jsonProperties.getString("caseid");
+                                        query = "@rm\\:caseNumber:\"" + caseid + "\"";
                     observand = entryBean.getEntry(query);
 
                     String text = psycBean.getKonklusionText(observand);
