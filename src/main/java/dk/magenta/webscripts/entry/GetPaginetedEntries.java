@@ -528,41 +528,40 @@ public class GetPaginetedEntries extends AbstractWebScript {
                 queryArray.put(o);
             }
 
-            if ( input.has("finalVerdict") || input.has("selectedVerdict")) {
+            if ( input.has("finalVerdict") && input.has("selectedVerdict")) {
 
                 JSONObject o = new JSONObject();
 
-
-                if (input.has("selectedVerdict")) {
-                    o.put("key", "finalVerdict");
-                    System.out.println("hvad er selectedVerdict");
-                    System.out.println(input.get("selectedVerdict"));
-
-                    o.put("value", input.get("selectedVerdict"));
-                    o.put("include", true);
-
-                    searchQueriesForPdf.put("finalVerdict", input.get("selectedVerdict").toString());
-                    queryArray.put(o);
+                String queryStringFinalVerdict = "";
+                JSONArray jsonArray = input.getJSONArray("selectedVerdict");
+                for (int i=0; i <= jsonArray.length()-1;i++) {
+                    if (i == 0) {
+                        queryStringFinalVerdict = queryStringFinalVerdict + "\"" + (String) jsonArray.get(i) + "\"";
+                    }
+                    else {
+                        queryStringFinalVerdict = queryStringFinalVerdict + " "  + "\"" +(String) jsonArray.get(i) + "\"";
+                    }
                 }
-                else {
-//                    o.put("value", "null");
-//                    o.put("include", false);
-                    searchQueriesForPdf.put("finalVerdict", "alle");
-                }
+
+                o.put("key", "finalVerdict");
+                System.out.println("hvad er selectedVerdict");
+                System.out.println(input.get("selectedVerdict"));
+
+                o.put("value", "(" + queryStringFinalVerdict + ")");
+                o.put("include", true);
+
+                searchQueriesForPdf.put("finalVerdict", input.get("selectedVerdict").toString());
+                queryArray.put(o);
+
 
 
             }
             else {
-                JSONObject o = new JSONObject();
-                o.put("key", "finalVerdict");
-                o.put("value", "null");
-                o.put("include", true);
-                queryArray.put(o);
-
-                // og sæt markør for special visning af kolonner
-                addExtraColumns = true;
-
+//                    o.put("value", "null");
+//                    o.put("include", false);
+                searchQueriesForPdf.put("finalVerdict", "alle");
             }
+
 
             if (input.has("firstName")) {
                 String fornavn = input.getString("firstName");
