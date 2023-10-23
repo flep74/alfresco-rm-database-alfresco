@@ -77,6 +77,8 @@
 		<property name="entryBean" ref="entryBean"/>
 		<property name="fileFolderService" ref="fileFolderService"/>
 		<property name="siteService" ref="siteService"/>
+		<property name="lockService" ref="lockService"/>
+		<property name="auditBean" ref="auditBean"/>
 	</bean>
 
 	<bean id="webscript.entries.waitinglist.get" class="dk.magenta.webscripts.entry.GetWaitingList" parent="webscript">
@@ -292,6 +294,7 @@
 
 	<bean id="webscript.contents.mergesuppleredeudttemplate.post" class="dk.magenta.webscripts.contents.MergeSuppleredendeUdtTemplate" parent="webscript">
 		<property name="documentTemplateBean" ref="documentTemplateBean"/>
+		<property name="NodeService" ref="nodeService"/>
 	</bean>
 
 	<bean id="webscript.contents.getdownloadstatus.get" class="dk.magenta.webscripts.contents.GetDownloadStatus" parent="webscript">

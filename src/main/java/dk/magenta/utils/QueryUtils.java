@@ -51,10 +51,10 @@ public class QueryUtils {
 
             // det er lige her du skal lave et hack, hvis paramKey = finalVerdict...
 
-            if (paramKey.equals("finalVerdict")) {
-                return "@" + DatabaseModel.RM_MODEL_PREFIX + "\\:" + paramKey + ":\"" + paramValue + "\"";
-            }
-            else if (paramValue.contains("[") || paramValue.contains("(")) {
+//            if (paramKey.equals("finalVerdict")) {
+//                return "@" + DatabaseModel.RM_MODEL_PREFIX + "\\:" + paramKey + ":\"" + paramValue + "\"";
+//            }
+            if (paramValue.contains("[") || paramValue.contains("(")) {
                 return "@" + DatabaseModel.RM_MODEL_PREFIX + "\\:" + paramKey + ":" + paramValue;
             }
             else {

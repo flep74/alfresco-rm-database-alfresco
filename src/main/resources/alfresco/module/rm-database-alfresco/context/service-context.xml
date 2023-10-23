@@ -51,6 +51,12 @@
         <property name="transformBean" ref="transformBean"/>
     </bean>
 
+    <bean id="auditBean" class="dk.magenta.beans.AuditBean">
+        <property name="nodeService" ref="NodeService"/>
+        <property name="NamespaceService" ref="namespaceService"/>
+        <property name="auditService" ref="auditService"/>
+    </bean>
+
     <bean id="mailBean" class="dk.magenta.beans.MailBean">
         <property name="nodeService" ref="NodeService"/>
         <property name="contentService" ref="contentService"/>

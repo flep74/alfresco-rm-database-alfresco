@@ -1,5 +1,6 @@
 package dk.magenta.webscripts.entry;
 
+import dk.magenta.beans.AuditBean;
 import dk.magenta.beans.EntryBean;
 import dk.magenta.beans.PsycBean;
 import dk.magenta.beans.PsycValuesBean;
@@ -7,6 +8,8 @@ import dk.magenta.model.DatabaseModel;
 import dk.magenta.utils.JSONUtils;
 import org.alfresco.jlan.util.StringList;
 import org.alfresco.model.ContentModel;
+import org.alfresco.service.cmr.lock.LockService;
+import org.alfresco.service.cmr.lock.LockType;
 import org.alfresco.service.cmr.model.FileFolderService;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
@@ -39,6 +42,12 @@ public class Psyc extends AbstractWebScript {
     }
     private PsycBean psycBean;
 
+    public void setAuditBean(AuditBean auditBean) {
+        this.auditBean = auditBean;
+    }
+
+    private AuditBean auditBean;
+
     public void setPsycValuesBean(PsycValuesBean psycValuesBean) {
         this.psycValuesBean = psycValuesBean;
     }
@@ -49,6 +58,12 @@ public class Psyc extends AbstractWebScript {
 
     private NodeService nodeService;
     private PsycValuesBean psycValuesBean;
+
+    public void setLockService(LockService lockService) {
+        this.lockService = lockService;
+    }
+
+    private LockService lockService;
 
     public void setEntryBean(EntryBean entryBean) {
         this.entryBean = entryBean;
@@ -145,17 +160,26 @@ public class Psyc extends AbstractWebScript {
                     NodeRef observand = entryBean.getEntry(query);
 
 
+                    // check if locked - then remove temporarily
+                    boolean temporaryUnlocked = false;
+                    if (lockService.isLocked(observand)) {
+                        lockService.unlock(observand);
+                        temporaryUnlocked = true;
+                    }
+
                     if (!nodeService.hasAspect(observand, ASPECT_PSYCDATA)) {
                         nodeService.addAspect(observand, ASPECT_PSYCDATA, null);
                     }
-
-
                     QName instrumentQname = QName.createQName(RMPSY_MODEL_URI, instrument);
 
                     if (selected.equals("")) {
                         nodeService.removeProperty(observand,instrumentQname);
                     } else {
                         nodeService.setProperty(observand,instrumentQname,selected);
+                    }
+
+                    if (temporaryUnlocked) {
+                        lockService.lock(observand, LockType.READ_ONLY_LOCK);
                     }
 
 
@@ -181,20 +205,47 @@ public class Psyc extends AbstractWebScript {
                     if (nodeService.hasAspect(observand, ASPECT_PSYCDATA) && (nodeService.getProperty(observand, instrumentQname) != null)) {
 
                         ArrayList idPsycData = (ArrayList) nodeService.getProperty(observand, QName.createQName(RMPSY_MODEL_URI, instrument));
+
+                        System.out.println("hvad er de valgte idPsycDate:");
+                        System.out.println(idPsycData);
+
+
                         ArrayList formattedList = new ArrayList<String>(Arrays.asList(((String)idPsycData.get(0)).split(",")));
                         ArrayList mappedValues = new ArrayList();
 
+                        // get all the values for this instrument and setup which are selected
+                        JSONObject values = psycValuesBean.getValuesForInstrument(instrument);
+                        JSONArray valuesArray = (JSONArray) values.get("values");
 
-                        // setup the totallist of id: xx, label: xx, val: xx
-                        for (int k=0; k<=psycValuesBean.getLengthOfInstrumentList(instrument)-1;k++) {
+                        for (int i=0; i<= valuesArray.length()-1;i++) {
+                            JSONObject val = (JSONObject) valuesArray.get(i);
 
-                            JSONObject entry = new JSONObject();
-                            entry.put("id",k);
-                            entry.put("label",psycValuesBean.mapIdToLabel(String.valueOf(k), instrument));
-                            entry.put("val", formattedList.contains(String.valueOf(k)) ? true : false);
+                            JSONObject instO = new JSONObject();
+                            instO.put("id",val.getString("id"));
+                            instO.put("label", val.getString("name"));
+                            instO.put("val", formattedList.contains(String.valueOf(val.getString("id"))) ? true : false);
+                            //instO.put("val",false);
 
-                            mappedValues.add(entry);
+                            mappedValues.add(instO);
+
+
                         }
+
+
+//                        // setup the totallist of id: xx, label: xx, val: xx
+//                        for (int k=0; k<=psycValuesBean.getLengthOfInstrumentList(instrument)-1;k++) {
+//
+//
+//
+//
+//
+//                            JSONObject entry = new JSONObject();
+//                            entry.put("id",k);
+//                            entry.put("label",psycValuesBean.mapIdToLabel(String.valueOf(k), instrument));
+//                            entry.put("val", formattedList.contains(String.valueOf(k)) ? true : false);
+//
+//                            mappedValues.add(entry);
+//                        }
 
                         // sort by label
                         Collections.sort(mappedValues, new Comparator<JSONObject>() {
@@ -406,14 +457,42 @@ public class Psyc extends AbstractWebScript {
 
                     newValue = jsonProperties.getString("newValue");
 
+                    temporaryUnlocked = false;
+                    if (lockService.isLocked(observand)) {
+                        lockService.unlock(observand);
+                        temporaryUnlocked = true;
+                    }
                     psycBean.updateKonklusionText(observand, newValue);
+                    if (temporaryUnlocked) {
+                        lockService.lock(observand, LockType.READ_ONLY_LOCK);
+                    }
+
                     break;
-                case "getKonklusionText":
-                    System.out.println("saveKonklusionText");
+
+                case "getTrail":
+                    // til post: localhost:8080/alfresco/s/database/retspsyk/psyc
+                    // {"properties" : {"method" : "getTrail", "caseid" : "600000", "auditFrom" : "2023-01-01"}}
 
                     caseid = jsonProperties.getString("caseid");
 
                     query = "@rm\\:caseNumber:\"" + caseid + "\"";
+                    String auditFrom = jsonProperties.getString("auditFrom");
+
+                    try {
+                        auditBean.getAuditLogByCaseNodeRef(caseid, auditFrom);
+                    }
+                    catch (Exception e) {
+                        System.out.println("exception");
+                        e.printStackTrace();
+
+                    }
+
+                        break;
+                case "getKonklusionText":
+                    System.out.println("saveKonklusionText");
+
+                    caseid = jsonProperties.getString("caseid");
+                                        query = "@rm\\:caseNumber:\"" + caseid + "\"";
                     observand = entryBean.getEntry(query);
 
                     String text = psycBean.getKonklusionText(observand);
