@@ -69,8 +69,6 @@ public class Reports extends AbstractWebScript {
                 bua=true;
             }
 
-
-
             switch (method) {
                 case "waitingtime":
 
