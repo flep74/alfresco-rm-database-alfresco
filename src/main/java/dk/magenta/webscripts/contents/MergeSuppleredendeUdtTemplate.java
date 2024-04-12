@@ -52,13 +52,22 @@ public class MergeSuppleredendeUdtTemplate extends AbstractWebScript {
 
         NodeRef newDocument = documentTemplateBean.generateSuppleredeUdtalelseDocument(new NodeRef("workspace://SpacesStore/" + (String)json.get("id")));
 
-        //  RITM0879283  -- if declaration contains no psykolog skabelon - make one available.
+        //  RITM0879283  -- if declaration contains no psykolog skabelon - make one available. Contains a bug, searchs in the wrong dir. not recursively
+
+        // hent noderef for folderen Erklæring og psykologisk undersøgelse
+        NodeRef checkFolder = nodeService.getChildByName(new NodeRef("workspace://SpacesStore/" + (String)json.get("id")), ContentModel.ASSOC_CONTAINS, DatabaseModel.ATTR_DEFAULT_DECLARATION_FOLDER);
 
         String cpr =  (String)nodeService.getProperty(new NodeRef("workspace://SpacesStore/" + (String)json.get("id")), DatabaseModel.PROP_CPR);
         String fileName = cpr.substring(0,6) + "_psykundersøgelse.odt";
 
+            System.out.println("hvad er fileName");
+            System.out.println(fileName);
+
         List<String> query = Arrays.asList(fileName);
-        List<ChildAssociationRef> children = nodeService.getChildrenByName(new NodeRef("workspace://SpacesStore/" + (String)json.get("id")), ContentModel.ASSOC_CONTAINS, query);
+        List<ChildAssociationRef> children = nodeService.getChildrenByName(checkFolder, ContentModel.ASSOC_CONTAINS, query);
+
+            System.out.println("children.size()");
+            System.out.println(children.size());
 
         // if no document with query name exists, then make the psyk. document.
         if (children.size() == 0) {
