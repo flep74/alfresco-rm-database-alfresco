@@ -48,7 +48,7 @@ public class MergeSuppleredendeUdtTemplate extends AbstractWebScript {
         webScriptResponse.setContentEncoding("UTF-8");
         webScriptWriter = webScriptResponse.getWriter();
 
-        System.out.println("immer hefe snitzhel");
+        System.out.println("immer hefe snitzhel2");
 
         NodeRef newDocument = documentTemplateBean.generateSuppleredeUdtalelseDocument(new NodeRef("workspace://SpacesStore/" + (String)json.get("id")));
 
