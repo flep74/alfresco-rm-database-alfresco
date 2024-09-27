@@ -18,7 +18,7 @@ import org.springframework.extensions.webscripts.AbstractWebScript;
 import org.springframework.extensions.webscripts.WebScriptRequest;
 import org.springframework.extensions.webscripts.WebScriptResponse;
 
-import javax.xml.soap.Node;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
@@ -138,7 +138,7 @@ public class FlowChart extends AbstractWebScript {
 
             String sort = "";
             boolean desc = false;
-
+git st
             List<NodeRef> entries;
 
             String userName;
@@ -166,6 +166,7 @@ public class FlowChart extends AbstractWebScript {
                 case "arrestanter":
                     sort = jsonProperties.getString("sort");
                     desc = jsonProperties.getBoolean("desc");
+                    System.out.println("duff");
                     entries = flowChartBean.getEntriesByStateArrestanter(siteShortName, defaultQuery, sort, desc);
                     result.put("entries", flowChartBean.nodeRefsTOData(entries));
                     result.put("total", entries.size());
