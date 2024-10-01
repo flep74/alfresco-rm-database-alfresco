@@ -5,6 +5,7 @@ import dk.magenta.model.DatabaseModel;
 import dk.magenta.utils.JSONUtils;
 import org.alfresco.model.ContentModel;
 import org.alfresco.repo.security.authentication.AuthenticationUtil;
+import org.alfresco.service.cmr.model.FileFolderService;
 import org.alfresco.service.cmr.model.FileInfo;
 import org.alfresco.service.cmr.repository.ChildAssociationRef;
 import org.alfresco.service.cmr.repository.NodeRef;
@@ -36,6 +37,12 @@ public class MergeSuppleredendeUdtTemplate extends AbstractWebScript {
 
     private NodeService nodeService;
 
+    public void setFileFolderService(FileFolderService fileFolderService) {
+        this.fileFolderService = fileFolderService;
+    }
+
+    private FileFolderService fileFolderService;
+
 
     @Override
     public void execute(WebScriptRequest webScriptRequest, WebScriptResponse webScriptResponse) throws IOException {
@@ -60,14 +67,12 @@ public class MergeSuppleredendeUdtTemplate extends AbstractWebScript {
         String cpr =  (String)nodeService.getProperty(new NodeRef("workspace://SpacesStore/" + (String)json.get("id")), DatabaseModel.PROP_CPR);
         String fileName = cpr.substring(0,6) + "_psykundersøgelse.odt";
 
-            System.out.println("hvad er fileName");
-            System.out.println(fileName);
-
         List<String> query = Arrays.asList(fileName);
-        List<ChildAssociationRef> children = nodeService.getChildrenByName(checkFolder, ContentModel.ASSOC_CONTAINS, query);
 
-            System.out.println("children.size()");
-            System.out.println(children.size());
+        NodeRef folder = fileFolderService.searchSimple(new NodeRef("workspace://SpacesStore/" + (String)json.get("id")), DatabaseModel.ATTR_DEFAULT_DECLARATION_FOLDER);
+        List<ChildAssociationRef> children = nodeService.getChildrenByName(folder, ContentModel.ASSOC_CONTAINS, query);
+            System.out.println("children");
+            System.out.println(children);
 
         // if no document with query name exists, then make the psyk. document.
         if (children.size() == 0) {

@@ -365,6 +365,8 @@ public class FlowChartBean {
 
     public List<NodeRef> getEntriesByStateArrestanter(String siteShortName, String default_query, String sort, boolean desc) {
 
+        System.out.println("stateArrestanter");
+
         JSONObject o = new JSONObject();
 
         String type = databaseBean.getType(siteShortName);
@@ -391,6 +393,9 @@ public class FlowChartBean {
         statusQuery += ") ";
 
         query += statusQuery;
+
+        System.out.println("hvad er query:");
+        System.out.println(query);
 
         List<NodeRef> nodeRefs = entryBean.getEntries(query, 0, 1000, sort, desc);
 
